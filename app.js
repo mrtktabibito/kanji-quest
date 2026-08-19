@@ -202,12 +202,27 @@
     $('adventureStars').textContent = starText(state.stageScores[stage.id]?.rating || 0);
   }
 
-  function bunnyMarkup(extra = '') {
-    return `<div class="goth-bunny ${extra}">
+  function bunnyInner() {
+    return `
+      <span class="bunny-wing wing-l"></span><span class="bunny-wing wing-r"></span>
       <span class="bunny-ear ear-l"></span><span class="bunny-ear ear-r"></span>
-      <span class="bunny-head"><i class="eye eye-l"></i><i class="eye eye-r"></i><i class="mouth"></i><i class="tear tear-l"></i><i class="tear tear-r"></i><i class="cheek cheek-l"></i><i class="cheek cheek-r"></i></span>
-      <span class="bunny-bow"><i></i></span><span class="bunny-body"><i class="heart"></i></span>
-    </div>`;
+      <span class="bunny-hood"></span>
+      <span class="bunny-face"><i class="eye eye-l"></i><i class="eye eye-r"></i><i class="mouth"></i><i class="tear tear-l"></i><i class="tear tear-r"></i><i class="cheek cheek-l"></i><i class="cheek cheek-r"></i></span>
+      <span class="bunny-ribbon"></span><span class="bunny-skull"><i></i><b></b></span>
+      <span class="bunny-body"><i class="heart"></i></span>`;
+  }
+
+  function bunnyMarkup(extra = '') {
+    return `<div class="goth-bunny ${extra}">${bunnyInner()}</div>`;
+  }
+
+  function decorateMascots() {
+    document.querySelectorAll('.goth-bunny').forEach(el => {
+      if (!el.dataset.decorated) {
+        el.innerHTML = bunnyInner();
+        el.dataset.decorated = '1';
+      }
+    });
   }
 
   function stagePosition(index) {
@@ -294,14 +309,23 @@
 
   function setMascotReaction(type, text = '') {
     const mascot = $('quizMascot');
+    const scene = $('questScene');
     if (!mascot) return;
     clearTimeout(reactionTimer);
     mascot.className = `goth-bunny ${type}`;
+    if (scene) {
+      scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
+      if (type === 'happy') scene.classList.add('fx-happy');
+      else if (type === 'celebrate' || type === 'victory') scene.classList.add('fx-celebrate');
+      else if (type === 'attack') scene.classList.add('fx-attack');
+      else if (type === 'sad') scene.classList.add('fx-sad');
+    }
     if ($('reactionText')) $('reactionText').textContent = text || (type === 'sad' ? 'つぎは だいじょうぶ！' : 'やった！');
     reactionTimer = setTimeout(() => {
       mascot.className = 'goth-bunny idle';
+      if (scene) scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
       if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
-    }, type === 'attack' ? 950 : 850);
+    }, type === 'attack' ? 1100 : type === 'celebrate' ? 1200 : 980);
   }
 
   function updateJourney(animate = true) {
@@ -528,9 +552,9 @@
       updateJourney(true);
 
       const isBossNow = currentContext.type === 'stage' && STAGES[currentContext.stageIndex]?.boss;
-      if (isBossNow) setMascotReaction('attack', 'こうげき！');
-      else if (sessionCombo > 0 && sessionCombo % 5 === 0) setMascotReaction('celebrate', `${sessionCombo}コンボ！`);
-      else setMascotReaction('happy', 'せいかい！ やった！');
+      if (isBossNow) setMascotReaction('attack', 'こうげき！ ドーン！');
+      else if (sessionCombo > 0 && sessionCombo % 5 === 0) setMascotReaction('celebrate', `${sessionCombo}コンボ！ だいせいこう！`);
+      else setMascotReaction('happy', 'せいかい！ うれしい！');
 
       if (currentContext.type === 'stage') {
         const stage = STAGES[currentContext.stageIndex];
@@ -554,7 +578,7 @@
       $('feedback').textContent = explanations[q.type] || 'おしい！';
       $('feedback').className = 'feedback bad';
       playTone(false);
-      setMascotReaction('sad', 'おしい！ つぎはいけるよ');
+      setMascotReaction('sad', 'おしい！ うるうる… でも つぎはいけるよ');
     }
 
     $('comboCount').textContent = sessionCombo;
@@ -828,5 +852,6 @@
     window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
   }
 
+  decorateMascots();
   updateHome();
 })();

@@ -1,4 +1,4 @@
-const CACHE = 'kanji-quest-v03-0.3.0';
+const CACHE = 'kanji-quest-v03-1-0.3.1';
 const ASSETS = [
   './', './index.html', './style.css', './app.js', './questions.js', './manifest.json',
   './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'

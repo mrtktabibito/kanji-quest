@@ -370,42 +370,55 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 .map-node-label b { display:block; margin-top:2px; font-size:9px; letter-spacing:-.04em; color:#d69d24; }
 @keyframes nodePulse { 50% { transform:translateY(-2px) scale(1.04); } }
 
-/* CSS-drawn original gothic rabbit mascot */
+/* CSS-drawn original gothic rabbit mascot - closer to the sample mood */
 .goth-bunny {
   --bun-scale:1;
-  position:relative; width:54px; height:65px; display:block; transform-origin:50% 100%; transform:scale(var(--bun-scale));
-  filter:drop-shadow(0 5px 5px rgba(60,31,72,.16));
+  position:relative; width:62px; height:74px; display:block; transform-origin:50% 100%; transform:scale(var(--bun-scale));
+  filter:drop-shadow(0 7px 7px rgba(60,31,72,.20));
 }
-.goth-bunny.mini { --bun-scale:.72; transform:scale(var(--bun-scale)); }
-.bunny-ear { position:absolute; z-index:1; top:0; width:17px; height:34px; border-radius:55% 55% 48% 48%; background:#302535; border:2px solid #211a25; }
-.bunny-ear::after { content:""; position:absolute; inset:5px 4px 7px; border-radius:inherit; background:linear-gradient(#9c5aa8,#ef9bc7); }
-.bunny-ear.ear-l { left:8px; transform:rotate(-17deg); }
-.bunny-ear.ear-r { right:8px; transform:rotate(17deg); }
-.bunny-head { position:absolute; z-index:3; top:19px; left:7px; width:40px; height:34px; border-radius:48% 48% 45% 45%; background:#fff8fd; border:3px solid #302535; }
-.eye { position:absolute; top:13px; width:4px; height:6px; border-radius:50%; background:#2a2130; }
-.eye-l { left:10px; } .eye-r { right:10px; }
-.cheek { position:absolute; top:20px; width:6px; height:3px; border-radius:50%; background:#f3a6ca; opacity:.72; }
-.cheek-l { left:5px; } .cheek-r { right:5px; }
-.mouth { position:absolute; left:50%; top:20px; width:7px; height:4px; border-bottom:2px solid #5e3b67; border-radius:0 0 50% 50%; transform:translateX(-50%); }
-.tear { display:none; position:absolute; z-index:5; top:19px; width:4px; height:8px; border-radius:60% 40% 60% 40%; background:#71c8ef; }
-.tear-l { left:7px; transform:rotate(20deg); } .tear-r { right:7px; transform:rotate(-20deg); }
-.bunny-bow { position:absolute; z-index:5; top:17px; left:24px; width:18px; height:10px; }
-.bunny-bow::before,.bunny-bow::after { content:""; position:absolute; top:0; width:10px; height:9px; border-radius:70% 25% 70% 25%; background:linear-gradient(135deg,#c56fc2,#f09bc9); border:1px solid #653a72; }
-.bunny-bow::before { left:-6px; transform:rotate(18deg); } .bunny-bow::after { right:-6px; transform:scaleX(-1) rotate(18deg); }
-.bunny-bow i { position:absolute; z-index:2; left:5px; top:2px; width:7px; height:7px; border-radius:50%; background:#6f3c83; border:1px solid #4e2d5b; }
-.bunny-body { position:absolute; z-index:2; left:15px; bottom:0; width:25px; height:24px; border-radius:48% 48% 42% 42%; background:#382a40; border:2px solid #251d2a; }
-.bunny-body::before,.bunny-body::after { content:""; position:absolute; bottom:-3px; width:10px; height:7px; border-radius:50%; background:#382a40; border:2px solid #251d2a; }
+.goth-bunny.mini { --bun-scale:.75; transform:scale(var(--bun-scale)); }
+.bunny-wing { position:absolute; z-index:1; top:36px; width:15px; height:18px; background:linear-gradient(180deg,#473150,#261c2b); border:2px solid #211925; }
+.bunny-wing.wing-l { left:6px; clip-path:polygon(100% 0,20% 28%,86% 50%,0 100%,100% 82%); transform:rotate(-10deg); }
+.bunny-wing.wing-r { right:6px; clip-path:polygon(0 0,80% 28%,14% 50%,100% 100%,0 82%); transform:rotate(10deg); }
+.bunny-ear { position:absolute; z-index:2; top:0; width:18px; height:36px; border-radius:55% 55% 48% 48%; background:#1f1825; border:2px solid #120f16; overflow:hidden; }
+.bunny-ear::after { content:""; position:absolute; inset:4px 4px 7px; border-radius:inherit; background:linear-gradient(#9c5aa8,#ef9bc7); }
+.bunny-ear.ear-l { left:10px; transform:rotate(-16deg); }
+.bunny-ear.ear-r { right:10px; transform:rotate(16deg); }
+.bunny-hood { position:absolute; z-index:3; top:18px; left:6px; width:50px; height:37px; border-radius:53% 53% 47% 47%; background:linear-gradient(180deg,#2b222f,#18131d); border:3px solid #120f16; }
+.bunny-face { position:absolute; z-index:4; top:24px; left:13px; width:36px; height:28px; border-radius:48% 48% 45% 45%; background:#fff8fd; border:2px solid #2b232f; }
+.eye { position:absolute; top:11px; width:4px; height:7px; border-radius:50%; background:#2a2130; }
+.eye-l { left:9px; } .eye-r { right:9px; }
+.cheek { position:absolute; top:18px; width:6px; height:3px; border-radius:50%; background:#f3a6ca; opacity:.82; }
+.cheek-l { left:4px; } .cheek-r { right:4px; }
+.mouth { position:absolute; left:50%; top:17px; width:8px; height:5px; border-bottom:2px solid #5e3b67; border-radius:0 0 50% 50%; transform:translateX(-50%); }
+.tear { display:none; position:absolute; z-index:6; top:16px; width:5px; height:10px; border-radius:60% 40% 60% 40%; background:#71c8ef; box-shadow:0 0 10px rgba(113,200,239,.35); }
+.tear-l { left:5px; transform:rotate(20deg); } .tear-r { right:5px; transform:rotate(-20deg); }
+.bunny-ribbon { position:absolute; z-index:6; top:12px; left:21px; width:22px; height:10px; }
+.bunny-ribbon::before,.bunny-ribbon::after { content:""; position:absolute; top:1px; width:12px; height:10px; border-radius:70% 25% 70% 25%; background:linear-gradient(135deg,#b84fbb,#f19cca); border:1px solid #592d66; }
+.bunny-ribbon::before { left:-4px; transform:rotate(18deg); } .bunny-ribbon::after { right:-4px; transform:scaleX(-1) rotate(18deg); }
+.bunny-skull { position:absolute; z-index:7; top:12px; left:26px; width:12px; height:12px; border-radius:50%; background:#f7bfd9; border:1.5px solid #5d355f; }
+.bunny-skull::before,.bunny-skull::after { content:""; position:absolute; bottom:-4px; width:4px; height:5px; border-radius:0 0 3px 3px; background:#f7bfd9; border:1.5px solid #5d355f; border-top:0; }
+.bunny-skull::before { left:1px; } .bunny-skull::after { right:1px; }
+.bunny-skull i,.bunny-skull b { position:absolute; top:4px; width:2px; height:2px; border-radius:50%; background:#5d355f; }
+.bunny-skull i { left:3px; } .bunny-skull b { right:3px; }
+.bunny-body { position:absolute; z-index:2; left:17px; bottom:0; width:28px; height:25px; border-radius:48% 48% 42% 42%; background:#2f2336; border:2px solid #19131d; }
+.bunny-body::before,.bunny-body::after { content:""; position:absolute; bottom:-3px; width:10px; height:7px; border-radius:50%; background:#2f2336; border:2px solid #19131d; }
 .bunny-body::before { left:-5px; transform:rotate(15deg); } .bunny-body::after { right:-5px; transform:rotate(-15deg); }
-.bunny-body .heart { position:absolute; left:8px; top:5px; width:8px; height:8px; transform:rotate(45deg); background:#e983b8; border-radius:2px; }
+.bunny-body .heart { position:absolute; left:10px; top:5px; width:8px; height:8px; transform:rotate(45deg); background:#e983b8; border-radius:2px; }
 .bunny-body .heart::before,.bunny-body .heart::after { content:""; position:absolute; width:8px; height:8px; border-radius:50%; background:#e983b8; }
 .bunny-body .heart::before { left:-4px; } .bunny-body .heart::after { top:-4px; }
+.goth-bunny::after { content:""; position:absolute; inset:auto auto 14px 6px; width:50px; height:22px; border-radius:50%; background:radial-gradient(ellipse at center, rgba(243,166,202,.28), rgba(243,166,202,0)); opacity:0; transform:scale(.7); pointer-events:none; }
 
-.map-mascot-anchor { position:absolute; z-index:8; width:56px; height:70px; transform:translate(-50%,-89%); pointer-events:none; transition:left .95s cubic-bezier(.2,.8,.25,1), top .95s cubic-bezier(.2,.8,.25,1); }
+.map-mascot-anchor { position:absolute; z-index:8; width:64px; height:78px; transform:translate(-50%,-89%); pointer-events:none; transition:left .95s cubic-bezier(.2,.8,.25,1), top .95s cubic-bezier(.2,.8,.25,1); }
 .map-mascot-anchor.arrive { animation:mascotArrive .55s ease both; }
 @keyframes mascotArrive { from{opacity:0;transform:translate(-50%,-120%) scale(.65)} to{opacity:1;transform:translate(-50%,-89%) scale(1)} }
 
 /* Quiz journey strip */
-.quest-scene { margin:-2px 0 12px; padding:10px 12px 8px; border-radius:18px; background:rgba(255,255,255,.7); border:1px solid rgba(123,69,143,.08); box-shadow:0 7px 22px rgba(73,39,87,.07); }
+.quest-scene { margin:-2px 0 10px; padding:10px 12px 8px; border-radius:18px; background:rgba(255,255,255,.78); border:1px solid rgba(123,69,143,.08); box-shadow:0 7px 22px rgba(73,39,87,.07); position:relative; overflow:hidden; }
+.quest-scene::after { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.18), transparent 55%); opacity:0; pointer-events:none; }
+.quest-scene.fx-happy::after, .quest-scene.fx-celebrate::after { animation:sceneFlash .9s ease; }
+.quest-scene.fx-sad::after { animation:sceneSad .9s ease; }
+.quest-scene.fx-attack::after { animation:sceneAttack .9s ease; }
 .quest-scene-top { display:flex; justify-content:space-between; gap:10px; align-items:center; }
 .reaction-text { color:#7a5b84; font-size:9px; font-weight:900; }
 .journey-lane { position:relative; height:58px; margin-top:2px; }
@@ -413,31 +426,40 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 .journey-fill { width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#a762ba,#f09bc9); transition:width .5s cubic-bezier(.2,.8,.25,1); }
 .journey-track::after { content:"✦  ·  ✦  ·  ✦  ·  ✦"; position:absolute; left:12%; right:10%; top:-16px; text-align:center; color:#cab0d5; font-size:8px; letter-spacing:.5em; white-space:nowrap; }
 .journey-goal { position:absolute; right:0; top:15px; font-size:25px; }
-.quiz-mascot-anchor { position:absolute; z-index:4; left:0%; top:0; width:54px; height:60px; transform:translateX(-18px); transition:left .5s cubic-bezier(.2,.8,.25,1); }
-.quiz-mascot-anchor .goth-bunny { --bun-scale:.72; }
+.quiz-mascot-anchor { position:absolute; z-index:4; left:0%; top:0; width:58px; height:64px; transform:translateX(-18px); transition:left .5s cubic-bezier(.2,.8,.25,1); }
+.quiz-mascot-anchor .goth-bunny { --bun-scale:.82; }
 
 /* Mascot reaction animations */
-.goth-bunny.idle { animation:bunnyIdle 1.8s ease-in-out infinite; }
-.goth-bunny.walk { animation:bunnyWalk .25s ease-in-out infinite alternate; }
-.goth-bunny.happy { animation:bunnyHappy .48s ease-in-out 2; }
-.goth-bunny.celebrate { animation:bunnyCelebrate .42s ease-in-out 2; }
-.goth-bunny.attack { animation:bunnyAttack .75s cubic-bezier(.3,.9,.2,1) 1; }
-.goth-bunny.sad { animation:bunnySad .55s ease-in-out 1; }
-.goth-bunny.victory { animation:bunnyVictory .65s ease-in-out 2; }
-.goth-bunny.sad .tear { display:block; animation:tearDrop .7s ease-in 1; }
-.goth-bunny.sad .mouth { top:23px; border-bottom:0; border-top:2px solid #5e3b67; border-radius:50% 50% 0 0; }
+.goth-bunny.idle { animation:bunnyIdle 1.6s ease-in-out infinite; }
+.goth-bunny.walk { animation:bunnyWalk .22s ease-in-out infinite alternate; }
+.goth-bunny.happy { animation:bunnyHappy .58s cubic-bezier(.2,.85,.28,1) 2; }
+.goth-bunny.celebrate { animation:bunnyCelebrate .48s cubic-bezier(.2,.85,.28,1) 3; }
+.goth-bunny.attack { animation:bunnyAttack .95s cubic-bezier(.25,.95,.2,1) 1; }
+.goth-bunny.sad { animation:bunnySad .65s ease-in-out 1; }
+.goth-bunny.victory { animation:bunnyVictory .7s ease-in-out 3; }
+.goth-bunny.happy::after,.goth-bunny.celebrate::after,.goth-bunny.victory::after { opacity:1; animation:glowBurst .65s ease-out 1; }
+.goth-bunny.sad .tear { display:block; animation:tearDrop .85s ease-in 2; }
+.goth-bunny.sad .mouth { top:19px; border-bottom:0; border-top:2px solid #5e3b67; border-radius:50% 50% 0 0; }
 .goth-bunny.happy .eye,.goth-bunny.celebrate .eye,.goth-bunny.victory .eye { height:4px; background:transparent; border-bottom:2px solid #2a2130; border-radius:0 0 50% 50%; }
-.goth-bunny.attack .bunny-body { transform:rotate(-10deg); }
+.goth-bunny.happy .bunny-ribbon,.goth-bunny.celebrate .bunny-ribbon,.goth-bunny.victory .bunny-ribbon { filter:drop-shadow(0 0 8px rgba(240,155,201,.5)); }
+.goth-bunny.attack .bunny-body { transform:rotate(-12deg) translateX(2px); }
+.goth-bunny.attack .bunny-wing.wing-l { animation:wingFlapL .16s linear 5 alternate; }
+.goth-bunny.attack .bunny-wing.wing-r { animation:wingFlapR .16s linear 5 alternate; }
 @keyframes bunnyIdle { 0%,100%{transform:scale(var(--bun-scale))} 50%{transform:translateY(-2px) scale(var(--bun-scale))} }
-@keyframes bunnyWalk { from{transform:translateY(0) rotate(-2deg) scale(var(--bun-scale))} to{transform:translateY(-4px) rotate(2deg) scale(var(--bun-scale))} }
-@keyframes bunnyHappy { 0%,100%{transform:translateY(0) scale(var(--bun-scale))} 45%{transform:translateY(-13px) scale(var(--bun-scale))} 65%{transform:translateY(-9px) rotate(5deg) scale(var(--bun-scale))} }
-@keyframes bunnyCelebrate { 0%,100%{transform:translateY(0) rotate(0) scale(var(--bun-scale))} 30%{transform:translateY(-15px) rotate(-8deg) scale(var(--bun-scale))} 65%{transform:translateY(-11px) rotate(9deg) scale(var(--bun-scale))} }
-@keyframes bunnyAttack { 0%{transform:translateX(0) scale(var(--bun-scale))} 35%{transform:translateX(28px) translateY(-4px) rotate(10deg) scale(var(--bun-scale))} 58%{transform:translateX(34px) rotate(-5deg) scale(var(--bun-scale))} 100%{transform:translateX(0) scale(var(--bun-scale))} }
-@keyframes bunnySad { 0%,100%{transform:scale(var(--bun-scale))} 35%{transform:translateY(4px) rotate(-4deg) scale(var(--bun-scale))} 65%{transform:translateY(4px) rotate(4deg) scale(var(--bun-scale))} }
-@keyframes bunnyVictory { 0%,100%{transform:translateY(0) rotate(0) scale(var(--bun-scale))} 32%{transform:translateY(-17px) rotate(-9deg) scale(var(--bun-scale))} 65%{transform:translateY(-11px) rotate(9deg) scale(var(--bun-scale))} }
-@keyframes tearDrop { from{transform:translateY(-2px);opacity:0} 25%{opacity:1} to{transform:translateY(12px);opacity:0} }
-
-/* Boss face is shown in V03; hit/damage reaction is planned for V04+. */
+@keyframes bunnyWalk { from{transform:translateY(0) rotate(-2deg) scale(var(--bun-scale))} to{transform:translateY(-5px) rotate(2deg) scale(var(--bun-scale))} }
+@keyframes bunnyHappy { 0%,100%{transform:translateY(0) scale(var(--bun-scale))} 34%{transform:translateY(-16px) rotate(-8deg) scale(calc(var(--bun-scale) * 1.05))} 65%{transform:translateY(-9px) rotate(8deg) scale(calc(var(--bun-scale) * 1.02))} }
+@keyframes bunnyCelebrate { 0%,100%{transform:translateY(0) rotate(0) scale(var(--bun-scale))} 25%{transform:translateY(-18px) rotate(-10deg) scale(calc(var(--bun-scale) * 1.06))} 55%{transform:translateY(-8px) rotate(11deg) scale(calc(var(--bun-scale) * 1.02))} 78%{transform:translateY(-16px) rotate(-7deg) scale(calc(var(--bun-scale) * 1.05))} }
+@keyframes bunnyAttack { 0%{transform:translateX(0) scale(var(--bun-scale))} 24%{transform:translateX(10px) translateY(-4px) rotate(-6deg) scale(var(--bun-scale))} 46%{transform:translateX(34px) translateY(-10px) rotate(10deg) scale(calc(var(--bun-scale) * 1.08))} 64%{transform:translateX(42px) translateY(-4px) rotate(-7deg) scale(calc(var(--bun-scale) * 1.06))} 100%{transform:translateX(0) scale(var(--bun-scale))} }
+@keyframes bunnySad { 0%,100%{transform:scale(var(--bun-scale))} 35%{transform:translateY(5px) rotate(-5deg) scale(var(--bun-scale))} 65%{transform:translateY(5px) rotate(5deg) scale(var(--bun-scale))} }
+@keyframes bunnyVictory { 0%,100%{transform:translateY(0) rotate(0) scale(var(--bun-scale))} 30%{transform:translateY(-19px) rotate(-11deg) scale(calc(var(--bun-scale) * 1.07))} 58%{transform:translateY(-9px) rotate(12deg) scale(calc(var(--bun-scale) * 1.03))} 84%{transform:translateY(-18px) rotate(-8deg) scale(calc(var(--bun-scale) * 1.07))} }
+@keyframes tearDrop { from{transform:translateY(-2px);opacity:0} 22%{opacity:1} to{transform:translateY(15px);opacity:0} }
+@keyframes glowBurst { 0%{transform:scale(.6);opacity:0} 35%{opacity:1} 100%{transform:scale(1.25);opacity:0} }
+@keyframes wingFlapL { from{transform:rotate(-10deg)} to{transform:rotate(-24deg)} }
+@keyframes wingFlapR { from{transform:rotate(10deg)} to{transform:rotate(24deg)} }
+@keyframes sceneFlash { 0%{opacity:0} 25%{opacity:1} 100%{opacity:0} }
+@keyframes sceneSad { 0%{opacity:0} 35%{opacity:.65; background:radial-gradient(circle at 50% 50%, rgba(113,200,239,.18), transparent 55%)} 100%{opacity:0} }
+@keyframes sceneAttack { 0%{opacity:0} 30%{opacity:.9; background:linear-gradient(90deg, transparent 0, rgba(243,166,202,.35) 45%, transparent 80%)} 100%{opacity:0} }
+/* Boss face is shown in V03.1; hit/damage reaction itself is planned for V04+. */
 .boss-head-row { display:flex; justify-content:space-between; align-items:center; font-size:11px; }
 .boss-identity { display:flex; align-items:center; gap:7px; }
 .boss-avatar { width:31px; height:31px; border-radius:11px; display:grid; place-items:center; background:rgba(255,255,255,.13); font-size:20px; }
@@ -459,6 +481,35 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .map-node-icon { width:44px;height:44px;border-radius:15px; }
   .map-node-label small { max-width:76px;font-size:7.5px; }
   .quest-scene { padding-left:9px;padding-right:9px; }
+}
+
+@media (max-width:430px), (max-height:860px) {
+  .app-shell { padding-left:max(12px, env(safe-area-inset-left)); padding-right:max(12px, env(safe-area-inset-right)); padding-top:max(12px, env(safe-area-inset-top)); padding-bottom:max(16px, env(safe-area-inset-bottom)); }
+  #quizView.active { overflow:hidden; }
+  .quiz-topbar { gap:10px; margin-bottom:10px; }
+  .icon-btn { width:38px; height:38px; border-radius:13px; }
+  .progress-text { margin-bottom:5px; font-size:11px; }
+  .quest-scene { padding:8px 10px 6px; margin-bottom:8px; }
+  .journey-lane { height:48px; }
+  .journey-track { top:28px; left:18px; right:22px; height:6px; }
+  .journey-goal { top:10px; font-size:22px; }
+  .quiz-mascot-anchor { width:54px; height:58px; }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.72; }
+  .reaction-text { font-size:8px; }
+  .boss-panel { margin:0 0 8px; padding:10px 12px; border-radius:15px; }
+  .question-card { min-height:168px; padding:16px 14px; border-radius:24px; }
+  .question-kind { padding:4px 10px; font-size:10px; }
+  .question-lead { margin-top:10px; font-size:12px; }
+  .question-visual { margin-top:8px; font-size:clamp(42px, 12vw, 60px); }
+  .question-main { margin-top:10px; font-size:clamp(52px, 16vw, 78px); }
+  .question-main.reading-prompt { font-size:clamp(28px, 10vw, 46px); }
+  .question-main.opposite-prompt { font-size:clamp(50px, 15vw, 72px); }
+  .question-sub { margin-top:8px; min-height:14px; font-size:11px; }
+  .combo-banner { margin:8px auto 0; padding:6px 11px; font-size:11px; }
+  .answers { gap:8px; margin-top:10px; }
+  .answer-btn { min-height:54px; border-radius:16px; padding:10px 12px; font-size:20px; }
+  .feedback { min-height:18px; margin-top:6px; font-size:11px; }
+  .primary-btn.next-btn { margin-top:8px; padding:13px 16px; font-size:16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .goth-bunny,.map-node.current .map-node-icon,.result-sparkle { animation:none !important; }
