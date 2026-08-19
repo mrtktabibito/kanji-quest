@@ -452,7 +452,9 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 .goth-bunny.happy::after,.goth-bunny.celebrate::after,.goth-bunny.victory::after { opacity:1; animation:glowBurst .65s ease-out 1; }
 .goth-bunny.sad .tear { display:block; animation:tearDrop .85s ease-in 2; }
 .goth-bunny.sad .mouth { top:19px; border-bottom:0; border-top:2px solid #5e3b67; border-radius:50% 50% 0 0; }
-.goth-bunny.happy .eye,.goth-bunny.celebrate .eye,.goth-bunny.victory .eye { height:4px; background:transparent; border-bottom:2px solid #2a2130; border-radius:0 0 50% 50%; }
+.goth-bunny.happy .eye,.goth-bunny.celebrate .eye,.goth-bunny.victory .eye { width:5px; height:8px; background:#241a2a; border:0; border-radius:50%; transform:scale(1.08); box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 8px rgba(229,127,190,.35); }
+.goth-bunny.happy .eye::after,.goth-bunny.celebrate .eye::after,.goth-bunny.victory .eye::after { content:""; position:absolute; width:2px; height:2px; border-radius:50%; background:#fff; left:1px; top:1px; }
+.goth-bunny.happy .mouth,.goth-bunny.celebrate .mouth,.goth-bunny.victory .mouth { top:17px; width:9px; height:6px; border:0; border-radius:0 0 9px 9px; background:#d962a0; box-shadow:inset 0 2px 0 #5e3b67; }
 .goth-bunny.happy .bunny-ribbon,.goth-bunny.celebrate .bunny-ribbon,.goth-bunny.victory .bunny-ribbon { filter:drop-shadow(0 0 8px rgba(240,155,201,.5)); }
 .goth-bunny.attack .bunny-body { transform:rotate(-12deg) translateX(2px); }
 .goth-bunny.attack .bunny-wing.wing-l { animation:wingFlapL .16s linear 5 alternate; }
@@ -471,7 +473,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 @keyframes sceneFlash { 0%{opacity:0} 25%{opacity:1} 100%{opacity:0} }
 @keyframes sceneSad { 0%{opacity:0} 35%{opacity:.65; background:radial-gradient(circle at 50% 50%, rgba(113,200,239,.18), transparent 55%)} 100%{opacity:0} }
 @keyframes sceneAttack { 0%{opacity:0} 30%{opacity:.9; background:linear-gradient(90deg, transparent 0, rgba(243,166,202,.35) 45%, transparent 80%)} 100%{opacity:0} }
-/* Boss face is shown in V03.1; hit/damage reaction itself is planned for V04+. */
+/* V04 includes boss hit, knockback and KO reactions. */
 .boss-head-row { display:flex; justify-content:space-between; align-items:center; font-size:11px; }
 .boss-identity { display:flex; align-items:center; gap:7px; }
 .boss-avatar { width:31px; height:31px; border-radius:11px; display:grid; place-items:center; background:rgba(255,255,255,.13); font-size:20px; }
@@ -495,34 +497,102 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .quest-scene { padding-left:9px;padding-right:9px; }
 }
 
-@media (max-width:430px), (max-height:860px) {
-  .app-shell { padding-left:max(12px, env(safe-area-inset-left)); padding-right:max(12px, env(safe-area-inset-right)); padding-top:max(12px, env(safe-area-inset-top)); padding-bottom:max(16px, env(safe-area-inset-bottom)); }
-  #quizView.active { overflow:hidden; }
-  .quiz-topbar { gap:10px; margin-bottom:10px; }
-  .icon-btn { width:38px; height:38px; border-radius:13px; }
-  .progress-text { margin-bottom:5px; font-size:11px; }
-  .quest-scene { padding:8px 10px 6px; margin-bottom:8px; }
-  .journey-lane { height:48px; }
-  .journey-track { top:28px; left:18px; right:22px; height:6px; }
-  .journey-goal { top:10px; font-size:22px; }
-  .quiz-mascot-anchor { width:54px; height:58px; }
-  .quiz-mascot-anchor .goth-bunny { --bun-scale:.72; }
-  .reaction-text { font-size:8px; }
-  .boss-panel { margin:0 0 8px; padding:10px 12px; border-radius:15px; }
-  .question-card { min-height:168px; padding:16px 14px; border-radius:24px; }
-  .question-kind { padding:4px 10px; font-size:10px; }
-  .question-lead { margin-top:10px; font-size:12px; }
-  .question-visual { margin-top:8px; font-size:clamp(42px, 12vw, 60px); }
-  .question-main { margin-top:10px; font-size:clamp(52px, 16vw, 78px); }
-  .question-main.reading-prompt { font-size:clamp(28px, 10vw, 46px); }
-  .question-main.opposite-prompt { font-size:clamp(50px, 15vw, 72px); }
-  .question-sub { margin-top:8px; min-height:14px; font-size:11px; }
-  .combo-banner { margin:8px auto 0; padding:6px 11px; font-size:11px; }
-  .answers { gap:8px; margin-top:10px; }
-  .answer-btn { min-height:54px; border-radius:16px; padding:10px 12px; font-size:20px; }
-  .feedback { min-height:18px; margin-top:6px; font-size:11px; }
-  .primary-btn.next-btn { margin-top:8px; padding:13px 16px; font-size:16px; }
+@media (max-width:430px) {
+  .app-shell { padding-left:max(10px, env(safe-area-inset-left)); padding-right:max(10px, env(safe-area-inset-right)); padding-top:max(8px, env(safe-area-inset-top)); padding-bottom:max(10px, env(safe-area-inset-bottom)); }
+  #quizView.active { min-height:calc(100dvh - 18px); display:flex; flex-direction:column; gap:0; overflow:hidden; }
+  .quiz-topbar { flex:0 0 auto; gap:8px; margin-bottom:6px; }
+  .icon-btn { width:36px; height:36px; border-radius:12px; }
+  .progress-text { margin-bottom:3px; font-size:10px; }
+  .progress-track { height:6px; }
+  .quiz-status { min-width:48px; gap:0; }
+  .mini-score,.combo-mini { font-size:10px; }
+  .quest-scene { flex:0 0 auto; padding:5px 8px 4px; margin:0 0 6px; border-radius:15px; min-height:66px; }
+  .quest-scene-top .tiny-label { font-size:7px; }
+  .reaction-text { font-size:7.5px; }
+  .journey-lane { height:40px; margin-top:0; }
+  .journey-track { top:23px; left:16px; right:22px; height:5px; }
+  .journey-track::after { display:none; }
+  .journey-goal { top:4px; font-size:20px; }
+  .quiz-mascot-anchor { width:46px; height:48px; transform:translateX(-14px); }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.57; }
+  .boss-panel { flex:0 0 auto; margin:0 0 6px; padding:7px 10px; border-radius:13px; }
+  .boss-avatar { width:25px; height:25px; font-size:16px; }
+  .boss-track { margin-top:5px; height:6px; }
+  .question-card { flex:0 0 auto; min-height:132px; max-height:168px; padding:10px 12px; border-radius:21px; }
+  .question-kind { padding:3px 9px; font-size:9px; }
+  .question-lead { margin-top:7px; font-size:11px; line-height:1.25; }
+  .question-visual { margin-top:5px; font-size:clamp(38px, 10vw, 48px); }
+  .question-main { margin-top:6px; font-size:clamp(46px, 14vw, 66px); }
+  .question-main.reading-prompt { font-size:clamp(24px, 8vw, 38px); }
+  .question-main.opposite-prompt { font-size:clamp(44px, 13vw, 62px); }
+  .question-sub { display:none; }
+  .combo-banner { flex:0 0 auto; margin:5px auto 0; padding:4px 9px; font-size:9.5px; }
+  .answers { flex:0 0 auto; gap:6px; margin-top:7px; }
+  .answers.answer-grid-3 { grid-template-columns:repeat(3,1fr); }
+  .answers.answer-grid-2 { grid-template-columns:repeat(2,1fr); }
+  .answers.answer-grid-2 .answer-btn:last-child:nth-child(odd) { grid-column:1 / -1; }
+  .answer-btn { min-height:45px; border-radius:14px; padding:7px 8px; font-size:18px; line-height:1.1; }
+  .feedback { flex:0 0 auto; min-height:16px; margin-top:4px; font-size:10px; line-height:1.25; }
+  .primary-btn.next-btn { flex:0 0 auto; margin-top:5px; padding:10px 14px; border-radius:14px; font-size:14px; }
+  #resultView.active .result-card { margin-top:0; padding:12px 12px 14px; border-radius:22px; }
+  .result-mascot-stage { height:54px; margin:-2px 0 0; }
+  .result-bunny { --bun-scale:.72; }
+  .result-sparkle { font-size:11px; }
+  .result-medal { width:48px; height:48px; margin:2px auto 5px; border-radius:16px; font-size:25px; }
+  .result-card .eyebrow { font-size:9px; }
+  .result-card h2 { font-size:22px; margin:5px 0 3px; }
+  .result-clear-stars { margin:3px 0; font-size:23px; }
+  .result-card p { margin:4px 0; font-size:12px; }
+  .result-stats { gap:6px; margin-top:8px; }
+  .result-stats div { padding:8px 4px; border-radius:13px; }
+  .result-stats span { font-size:7.5px; }
+  .result-stats strong { margin-top:2px; font-size:18px; }
+  .unlock-box { margin-top:8px; padding:8px; border-radius:14px; }
+  .unlock-box strong { font-size:11px; }
+  .unlock-box span { margin-top:1px; font-size:9px; }
+  #resultView .primary-btn { margin-top:8px; padding:11px 13px; font-size:15px; }
+  #resultView .secondary-wide { margin-top:6px; padding:10px; border-radius:13px; font-size:13px; }
 }
+
+@media (max-width:430px) and (max-height:700px) {
+  .quest-scene { min-height:56px; padding-top:3px; padding-bottom:2px; }
+  .journey-lane { height:34px; }
+  .journey-track { top:19px; }
+  .journey-goal { top:1px; }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.49; }
+  .question-card { min-height:112px; max-height:138px; padding:8px 10px; }
+  .question-main { font-size:clamp(40px,12vw,56px); }
+  .answer-btn { min-height:41px; font-size:17px; }
+  .feedback { min-height:14px; }
+  .primary-btn.next-btn { padding:8px 12px; }
+}
+
+/* V04 reaction particles and boss hit/KO */
+.quest-scene,.boss-panel { position:relative; }
+.fx-particle { position:absolute; z-index:30; left:50%; top:50%; font-style:normal; font-weight:900; pointer-events:none; transform:translate(-50%,-50%); opacity:0; animation:fxBurst .92s cubic-bezier(.15,.8,.25,1) var(--delay,0s) forwards; }
+.fx-happy,.fx-celebrate,.fx-ko { color:#e878b6; text-shadow:0 0 8px rgba(232,120,182,.38); }
+.fx-sad { color:#67bde9; }
+.fx-attack,.fx-boss { color:#f2b84b; text-shadow:0 0 8px rgba(242,184,75,.4); }
+@keyframes fxBurst { 0%{opacity:0;transform:translate(-50%,-50%) scale(.35) rotate(0)} 18%{opacity:1} 100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.15) rotate(var(--rot))} }
+.quest-scene.fx-happy { animation:sceneBounce .5s ease; }
+.quest-scene.fx-celebrate { animation:sceneParty .75s ease; }
+.quest-scene.fx-sad { animation:sceneWobble .58s ease; }
+.quest-scene.fx-attack { animation:sceneDash .55s ease; }
+@keyframes sceneBounce { 40%{transform:translateY(-3px) scale(1.01)} }
+@keyframes sceneParty { 20%{transform:scale(1.015)} 45%{transform:rotate(-.4deg) scale(1.02)} 70%{transform:rotate(.4deg) scale(1.02)} }
+@keyframes sceneWobble { 25%{transform:translateX(-2px)} 50%{transform:translateX(2px)} 75%{transform:translateX(-1px)} }
+@keyframes sceneDash { 35%{transform:translateX(3px)} 60%{transform:translateX(-2px)} }
+.boss-panel.boss-hit { animation:bossHitPanel .58s ease; box-shadow:0 0 0 3px rgba(255,137,177,.18),0 12px 34px rgba(176,62,111,.25); }
+.boss-avatar-hit { animation:bossAvatarHit .62s cubic-bezier(.2,.85,.3,1); }
+.boss-hit-burst,.boss-ko { position:absolute; z-index:35; right:14px; top:50%; transform:translateY(-50%); font-weight:1000; color:#fff4b8; text-shadow:0 2px 0 #9d3c67,0 0 10px rgba(255,255,255,.35); animation:hitText .78s ease forwards; pointer-events:none; }
+.boss-ko { left:50%; right:auto; top:50%; font-size:28px; color:#fff; }
+.boss-panel.boss-defeated { animation:bossDefeatPanel 1.05s ease forwards; }
+.boss-avatar-ko { animation:bossAvatarKO 1.05s cubic-bezier(.15,.85,.3,1) forwards; }
+@keyframes bossHitPanel { 0%,100%{transform:translateX(0);filter:none} 18%{transform:translateX(-7px);filter:brightness(1.55) saturate(1.3)} 36%{transform:translateX(6px)} 55%{transform:translateX(-4px)} 72%{transform:translateX(2px)} }
+@keyframes bossAvatarHit { 0%{transform:scale(1)} 28%{transform:translateX(10px) rotate(16deg) scale(.86)} 52%{transform:translateX(-5px) rotate(-8deg)} 100%{transform:none} }
+@keyframes hitText { 0%{opacity:0;transform:translateY(-50%) scale(.45)} 25%{opacity:1;transform:translateY(-70%) scale(1.18)} 100%{opacity:0;transform:translateY(-105%) scale(.92)} }
+@keyframes bossDefeatPanel { 0%{filter:none;opacity:1;transform:none} 22%{filter:brightness(1.8);transform:translateX(-7px)} 40%{transform:translateX(7px)} 62%{filter:brightness(1);transform:translateY(-4px) scale(1.01)} 100%{filter:grayscale(.5);opacity:.42;transform:translateY(7px) scale(.96)} }
+@keyframes bossAvatarKO { 0%{transform:none;opacity:1} 35%{transform:translateX(13px) translateY(-10px) rotate(28deg) scale(1.15)} 72%{transform:translateX(28px) translateY(5px) rotate(65deg) scale(.72);opacity:.8} 100%{transform:translateX(42px) translateY(18px) rotate(95deg) scale(.35);opacity:0} }
 @media (prefers-reduced-motion: reduce) {
   .goth-bunny,.map-node.current .map-node-icon,.result-sparkle { animation:none !important; }
   .map-mascot-anchor,.quiz-mascot-anchor,.journey-fill { transition:none !important; }
@@ -597,7 +667,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </button>
       </div>
 
-      <footer>Kanji Quest V03.1 · v0.3.1</footer>
+      <footer>Kanji Quest V04 · v0.4.0</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -1090,11 +1160,68 @@ window.KANJI_DATA = [
       else if (type === 'sad') scene.classList.add('fx-sad');
     }
     if ($('reactionText')) $('reactionText').textContent = text || (type === 'sad' ? 'つぎは だいじょうぶ！' : 'やった！');
+    clearFx(scene);
+    if (type === 'happy') spawnFx(scene, 'happy', 12);
+    else if (type === 'celebrate' || type === 'victory') spawnFx(scene, 'celebrate', 20);
+    else if (type === 'attack') spawnFx(scene, 'attack', 14);
+    else if (type === 'sad') spawnFx(scene, 'sad', 8);
     reactionTimer = setTimeout(() => {
       mascot.className = 'goth-bunny idle';
       if (scene) scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
       if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
     }, type === 'attack' ? 1100 : type === 'celebrate' ? 1200 : 980);
+  }
+
+  function clearFx(container) {
+    if (!container) return;
+    container.querySelectorAll('.fx-particle,.boss-hit-burst,.boss-ko').forEach(el => el.remove());
+  }
+
+  function spawnFx(container, kind = 'happy', count = 12) {
+    if (!container) return;
+    const glyphs = {
+      happy:['★','✦','♥','✧'],
+      celebrate:['★','♥','✦','◆','✧'],
+      sad:['💧','•','💧'],
+      attack:['✦','⚡','★'],
+      boss:['★','✦','⚡','◆'],
+      ko:['★','✦','♥','◆','✧']
+    }[kind] || ['✦'];
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('i');
+      el.className = `fx-particle fx-${kind}`;
+      el.textContent = glyphs[i % glyphs.length];
+      const angle = (Math.PI * 2 * i / count) + (Math.random() * .35);
+      const distance = 28 + Math.random() * 52;
+      el.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+      el.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
+      el.style.setProperty('--rot', `${-90 + Math.random() * 180}deg`);
+      el.style.setProperty('--delay', `${Math.random() * .12}s`);
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 1050);
+    }
+  }
+
+  function animateBossDamage(defeated = false) {
+    const panel = $('bossPanel');
+    const avatar = $('bossAvatar');
+    if (!panel || panel.classList.contains('hidden')) return;
+    clearFx(panel);
+    panel.classList.remove('boss-hit','boss-defeated');
+    avatar?.classList.remove('boss-avatar-hit','boss-avatar-ko');
+    void panel.offsetWidth;
+    panel.classList.add(defeated ? 'boss-defeated' : 'boss-hit');
+    avatar?.classList.add(defeated ? 'boss-avatar-ko' : 'boss-avatar-hit');
+    const burst = document.createElement('div');
+    burst.className = defeated ? 'boss-ko' : 'boss-hit-burst';
+    burst.textContent = defeated ? 'KO! ★' : `💥 -${BOSS_DAMAGE}`;
+    panel.appendChild(burst);
+    spawnFx(panel, defeated ? 'ko' : 'boss', defeated ? 22 : 12);
+    setTimeout(() => {
+      panel.classList.remove('boss-hit');
+      avatar?.classList.remove('boss-avatar-hit');
+      if (!defeated) burst.remove();
+    }, 900);
   }
 
   function updateJourney(animate = true) {
@@ -1222,6 +1349,9 @@ window.KANJI_DATA = [
       if ($('bossAvatar')) $('bossAvatar').textContent = stage.icon;
       $('bossHp').textContent = bossHp;
       $('bossBar').style.width = '100%';
+      $('bossPanel').classList.remove('boss-hit','boss-defeated');
+      $('bossAvatar')?.classList.remove('boss-avatar-hit','boss-avatar-ko');
+      clearFx($('bossPanel'));
       $('bossPanel').classList.remove('hidden');
     } else {
       $('bossPanel').classList.add('hidden');
@@ -1270,6 +1400,10 @@ window.KANJI_DATA = [
 
     const answers = $('answers');
     answers.innerHTML = '';
+    answers.classList.remove('answer-grid-3','answer-grid-2');
+    const maxOptionLen = Math.max(...q.options.map(x => [...String(x)].length));
+    if (maxOptionLen <= 3) answers.classList.add('answer-grid-3');
+    else if (maxOptionLen <= 5) answers.classList.add('answer-grid-2');
     q.options.forEach(option => {
       const btn = document.createElement('button');
       btn.className = 'answer-btn';
@@ -1323,7 +1457,7 @@ window.KANJI_DATA = [
       const isBossNow = currentContext.type === 'stage' && STAGES[currentContext.stageIndex]?.boss;
       if (isBossNow) setMascotReaction('attack', 'こうげき！ ドーン！');
       else if (sessionCombo > 0 && sessionCombo % 5 === 0) setMascotReaction('celebrate', `${sessionCombo}コンボ！ だいせいこう！`);
-      else setMascotReaction('happy', 'せいかい！ うれしい！');
+      else setMascotReaction('happy', 'せいかい！ やったー！ ★');
 
       if (currentContext.type === 'stage') {
         const stage = STAGES[currentContext.stageIndex];
@@ -1331,6 +1465,7 @@ window.KANJI_DATA = [
           bossHp = Math.max(0, bossHp - BOSS_DAMAGE);
           $('bossHp').textContent = bossHp;
           $('bossBar').style.width = `${(bossHp / BOSS_MAX_HP) * 100}%`;
+          animateBossDamage(bossHp === 0);
         }
       }
     } else {
@@ -1347,7 +1482,7 @@ window.KANJI_DATA = [
       $('feedback').textContent = explanations[q.type] || 'おしい！';
       $('feedback').className = 'feedback bad';
       playTone(false);
-      setMascotReaction('sad', 'おしい！ うるうる… でも つぎはいけるよ');
+      setMascotReaction('sad', 'おしい！ なみだ… つぎは きっとできる！');
     }
 
     $('comboCount').textContent = sessionCombo;

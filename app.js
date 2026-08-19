@@ -321,11 +321,68 @@
       else if (type === 'sad') scene.classList.add('fx-sad');
     }
     if ($('reactionText')) $('reactionText').textContent = text || (type === 'sad' ? 'つぎは だいじょうぶ！' : 'やった！');
+    clearFx(scene);
+    if (type === 'happy') spawnFx(scene, 'happy', 12);
+    else if (type === 'celebrate' || type === 'victory') spawnFx(scene, 'celebrate', 20);
+    else if (type === 'attack') spawnFx(scene, 'attack', 14);
+    else if (type === 'sad') spawnFx(scene, 'sad', 8);
     reactionTimer = setTimeout(() => {
       mascot.className = 'goth-bunny idle';
       if (scene) scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
       if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
     }, type === 'attack' ? 1100 : type === 'celebrate' ? 1200 : 980);
+  }
+
+  function clearFx(container) {
+    if (!container) return;
+    container.querySelectorAll('.fx-particle,.boss-hit-burst,.boss-ko').forEach(el => el.remove());
+  }
+
+  function spawnFx(container, kind = 'happy', count = 12) {
+    if (!container) return;
+    const glyphs = {
+      happy:['★','✦','♥','✧'],
+      celebrate:['★','♥','✦','◆','✧'],
+      sad:['💧','•','💧'],
+      attack:['✦','⚡','★'],
+      boss:['★','✦','⚡','◆'],
+      ko:['★','✦','♥','◆','✧']
+    }[kind] || ['✦'];
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('i');
+      el.className = `fx-particle fx-${kind}`;
+      el.textContent = glyphs[i % glyphs.length];
+      const angle = (Math.PI * 2 * i / count) + (Math.random() * .35);
+      const distance = 28 + Math.random() * 52;
+      el.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+      el.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
+      el.style.setProperty('--rot', `${-90 + Math.random() * 180}deg`);
+      el.style.setProperty('--delay', `${Math.random() * .12}s`);
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 1050);
+    }
+  }
+
+  function animateBossDamage(defeated = false) {
+    const panel = $('bossPanel');
+    const avatar = $('bossAvatar');
+    if (!panel || panel.classList.contains('hidden')) return;
+    clearFx(panel);
+    panel.classList.remove('boss-hit','boss-defeated');
+    avatar?.classList.remove('boss-avatar-hit','boss-avatar-ko');
+    void panel.offsetWidth;
+    panel.classList.add(defeated ? 'boss-defeated' : 'boss-hit');
+    avatar?.classList.add(defeated ? 'boss-avatar-ko' : 'boss-avatar-hit');
+    const burst = document.createElement('div');
+    burst.className = defeated ? 'boss-ko' : 'boss-hit-burst';
+    burst.textContent = defeated ? 'KO! ★' : `💥 -${BOSS_DAMAGE}`;
+    panel.appendChild(burst);
+    spawnFx(panel, defeated ? 'ko' : 'boss', defeated ? 22 : 12);
+    setTimeout(() => {
+      panel.classList.remove('boss-hit');
+      avatar?.classList.remove('boss-avatar-hit');
+      if (!defeated) burst.remove();
+    }, 900);
   }
 
   function updateJourney(animate = true) {
@@ -453,6 +510,9 @@
       if ($('bossAvatar')) $('bossAvatar').textContent = stage.icon;
       $('bossHp').textContent = bossHp;
       $('bossBar').style.width = '100%';
+      $('bossPanel').classList.remove('boss-hit','boss-defeated');
+      $('bossAvatar')?.classList.remove('boss-avatar-hit','boss-avatar-ko');
+      clearFx($('bossPanel'));
       $('bossPanel').classList.remove('hidden');
     } else {
       $('bossPanel').classList.add('hidden');
@@ -501,6 +561,10 @@
 
     const answers = $('answers');
     answers.innerHTML = '';
+    answers.classList.remove('answer-grid-3','answer-grid-2');
+    const maxOptionLen = Math.max(...q.options.map(x => [...String(x)].length));
+    if (maxOptionLen <= 3) answers.classList.add('answer-grid-3');
+    else if (maxOptionLen <= 5) answers.classList.add('answer-grid-2');
     q.options.forEach(option => {
       const btn = document.createElement('button');
       btn.className = 'answer-btn';
@@ -554,7 +618,7 @@
       const isBossNow = currentContext.type === 'stage' && STAGES[currentContext.stageIndex]?.boss;
       if (isBossNow) setMascotReaction('attack', 'こうげき！ ドーン！');
       else if (sessionCombo > 0 && sessionCombo % 5 === 0) setMascotReaction('celebrate', `${sessionCombo}コンボ！ だいせいこう！`);
-      else setMascotReaction('happy', 'せいかい！ うれしい！');
+      else setMascotReaction('happy', 'せいかい！ やったー！ ★');
 
       if (currentContext.type === 'stage') {
         const stage = STAGES[currentContext.stageIndex];
@@ -562,6 +626,7 @@
           bossHp = Math.max(0, bossHp - BOSS_DAMAGE);
           $('bossHp').textContent = bossHp;
           $('bossBar').style.width = `${(bossHp / BOSS_MAX_HP) * 100}%`;
+          animateBossDamage(bossHp === 0);
         }
       }
     } else {
@@ -578,7 +643,7 @@
       $('feedback').textContent = explanations[q.type] || 'おしい！';
       $('feedback').className = 'feedback bad';
       playTone(false);
-      setMascotReaction('sad', 'おしい！ うるうる… でも つぎはいけるよ');
+      setMascotReaction('sad', 'おしい！ なみだ… つぎは きっとできる！');
     }
 
     $('comboCount').textContent = sessionCombo;
