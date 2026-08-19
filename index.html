@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
   <link rel="icon" href="icons/icon-192.png" />
-  <link rel="stylesheet" href="style_v064.css" />
+  <link rel="stylesheet" href="style_v07.css" />
   <title>かんじクエスト</title>
 </head>
 <body>
@@ -66,7 +66,7 @@
         </button>
         <button id="collectionBtn" class="secondary-btn" type="button">
           <span class="action-icon">◆</span>
-          <span><strong>コレクション</strong><small id="collectionMini">0 / 6</small></span>
+          <span><strong>キャラずかん</strong><small id="collectionMini">0 / 32</small></span>
         </button>
         <button id="recordBtn" class="secondary-btn" type="button">
           <span class="action-icon">▦</span>
@@ -78,7 +78,7 @@
         </button>
       </div>
 
-      <footer>Kanji Quest V06.4 · v0.6.4</footer>
+      <footer>Kanji Quest V7 · v0.7.0</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -195,12 +195,13 @@
       </div>
     </section>
 
-    <section id="collectionView" class="view" aria-label="コレクション">
+    <section id="collectionView" class="view" aria-label="キャラクター図鑑">
       <header class="page-header">
         <button id="collectionBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
-        <div><h2>コレクション</h2><p>⭐を あつめて なかまを ふやそう</p></div>
+        <div><h2>キャラクターずかん</h2><p>なかまを あつめて しょうかいを みよう</p></div>
       </header>
-      <div id="collectionGrid" class="collection-grid"></div>
+      <div id="collectionSummary" class="collection-summary"></div>
+      <div id="collectionGrid" class="collection-grid encyclopedia-grid"></div>
     </section>
 
     <section id="recordView" class="view" aria-label="学習記録">
@@ -238,7 +239,7 @@
     </div>
   </main>
 
-  <script src="questions_v064.js"></script>
-  <script src="app_v064.js"></script>
+  <script src="questions_v07.js"></script>
+  <script src="app_v07.js"></script>
 </body>
 </html>
