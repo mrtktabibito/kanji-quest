@@ -20,6 +20,21 @@
     { id:'b2', label:'BOSS', title:'かんじドラゴン', icon:'🐲', boss:true, pool:'一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六' }
   ];
 
+  // V03 冒険マップの座標（各ワールド5ステージ）。
+  const WORLD_LAYOUTS = [
+    [
+      {x:14,y:80},{x:38,y:62},{x:70,y:72},{x:78,y:40},{x:48,y:16}
+    ],
+    [
+      {x:16,y:80},{x:42,y:62},{x:76,y:72},{x:70,y:40},{x:44,y:16}
+    ]
+  ];
+
+  const WORLD_INFO = [
+    { title:'WORLD 1　むらさきの森', sub:'かず・しぜん・そら・からだ', icon:'🌙' },
+    { title:'WORLD 2　ほしぞらの町', sub:'ばしょ・くらし・がっこう・まとめ', icon:'⭐' }
+  ];
+
   // 絵だけで意味を取り違えにくい漢字に限定する。
   // 林・森は木の本数で区別し、川・空など曖昧になりやすい絵は出題しない。
   const PICTURES = {
@@ -64,6 +79,8 @@
   let starsAtStart = state.stars;
   let currentContext = { type:'free' };
   let lastContext = { type:'free' };
+  let reactionTimer = null;
+  let pendingMapMove = null;
 
   const $ = (id) => document.getElementById(id);
   const views = ['homeView','stageView','quizView','resultView','collectionView','recordView'];
@@ -185,24 +202,122 @@
     $('adventureStars').textContent = starText(state.stageScores[stage.id]?.rating || 0);
   }
 
-  function renderStageMap() {
+  function bunnyMarkup(extra = '') {
+    return `<div class="goth-bunny ${extra}">
+      <span class="bunny-ear ear-l"></span><span class="bunny-ear ear-r"></span>
+      <span class="bunny-head"><i class="eye eye-l"></i><i class="eye eye-r"></i><i class="mouth"></i><i class="tear tear-l"></i><i class="tear tear-r"></i><i class="cheek cheek-l"></i><i class="cheek cheek-r"></i></span>
+      <span class="bunny-bow"><i></i></span><span class="bunny-body"><i class="heart"></i></span>
+    </div>`;
+  }
+
+  function stagePosition(index) {
+    const world = Math.floor(index / 5);
+    const local = index % 5;
+    return { world, ...(WORLD_LAYOUTS[world]?.[local] || {x:50,y:50}) };
+  }
+
+  function renderStageMap(move = null) {
     const map = $('stageMap');
     map.innerHTML = '';
-    STAGES.forEach((stage,index) => {
-      const unlocked = isStageUnlocked(index);
-      const score = state.stageScores[stage.id] || { rating:0, best:0 };
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = `stage-node${stage.boss ? ' boss' : ''}${unlocked ? '' : ' locked'}`;
-      btn.innerHTML = `
-        <span class="stage-icon">${unlocked ? stage.icon : '🔒'}</span>
-        <span class="stage-copy">
-          <strong>${stage.label} ${stage.title}</strong>
-          <small>${stage.boss ? '10もんで ボスを たおそう' : '10この かんじに ちょうせん'}${score.best ? ` ・ ベスト ${score.best}/10` : ''}</small>
-        </span>
-        <span class="${unlocked ? 'stage-stars' : 'stage-lock'}">${unlocked ? starText(score.rating || 0) : 'LOCK'}</span>`;
-      if (unlocked) btn.addEventListener('click', () => startStage(index));
-      map.appendChild(btn);
+    const currentIndex = move?.to ?? getNextStageIndex();
+
+    for (let world = 0; world < 2; world++) {
+      const board = document.createElement('section');
+      board.className = `world-board world-${world+1}`;
+      board.dataset.world = world;
+      board.innerHTML = `
+        <div class="world-title"><span>${WORLD_INFO[world].icon}</span><div><strong>${WORLD_INFO[world].title}</strong><small>${WORLD_INFO[world].sub}</small></div></div>
+        <svg class="world-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="${world === 0 ? 'M14 80 C24 69 30 62 38 62 S60 74 70 72 S81 55 78 40 S58 22 48 16' : 'M16 80 C27 70 34 62 42 62 S65 73 76 72 S78 54 70 40 S54 23 44 16'}" />
+        </svg>
+        <div class="world-deco d1">✦</div><div class="world-deco d2">♡</div><div class="world-deco d3">★</div>`;
+
+      for (let local = 0; local < 5; local++) {
+        const index = world * 5 + local;
+        const stage = STAGES[index];
+        const pos = WORLD_LAYOUTS[world][local];
+        const unlocked = isStageUnlocked(index);
+        const score = state.stageScores[stage.id] || { rating:0, best:0 };
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `map-node${stage.boss ? ' boss' : ''}${unlocked ? '' : ' locked'}${index === currentIndex ? ' current' : ''}`;
+        btn.style.left = `${pos.x}%`;
+        btn.style.top = `${pos.y}%`;
+        btn.setAttribute('aria-label', `${stage.label} ${stage.title}${unlocked ? '' : ' ロック中'}`);
+        btn.innerHTML = `<span class="map-node-icon">${unlocked ? stage.icon : '🔒'}</span>
+          <span class="map-node-label"><strong>${stage.label}</strong><small>${stage.title}</small><b>${unlocked ? starText(score.rating || 0) : 'LOCK'}</b></span>`;
+        if (unlocked) btn.addEventListener('click', () => startStage(index));
+        board.appendChild(btn);
+      }
+
+      map.appendChild(board);
+    }
+
+    const targetPos = stagePosition(currentIndex);
+    const targetBoard = map.querySelector(`[data-world="${targetPos.world}"]`);
+    if (targetBoard) {
+      const anchor = document.createElement('div');
+      anchor.id = 'mapMascotAnchor';
+      anchor.className = 'map-mascot-anchor';
+      anchor.innerHTML = bunnyMarkup('map-bunny idle');
+      const startPos = move ? stagePosition(move.from) : targetPos;
+      const canWalk = move && startPos.world === targetPos.world;
+      const initial = canWalk ? startPos : targetPos;
+      anchor.style.left = `${initial.x}%`;
+      anchor.style.top = `${initial.y}%`;
+      targetBoard.appendChild(anchor);
+
+      if (canWalk) {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          anchor.classList.add('moving');
+          const bunny = anchor.querySelector('.goth-bunny');
+          bunny?.classList.remove('idle');
+          bunny?.classList.add('walk');
+          anchor.style.left = `${targetPos.x}%`;
+          anchor.style.top = `${targetPos.y}%`;
+          setTimeout(() => {
+            anchor.classList.remove('moving');
+            bunny?.classList.remove('walk');
+            bunny?.classList.add('celebrate');
+            setTimeout(() => { bunny?.classList.remove('celebrate'); bunny?.classList.add('idle'); }, 850);
+          }, 1050);
+        }));
+      } else if (move) {
+        anchor.classList.add('arrive');
+        const bunny = anchor.querySelector('.goth-bunny');
+        bunny?.classList.remove('idle');
+        bunny?.classList.add('celebrate');
+        setTimeout(() => { bunny?.classList.remove('celebrate'); bunny?.classList.add('idle'); }, 900);
+      }
+    }
+  }
+
+  function setMascotReaction(type, text = '') {
+    const mascot = $('quizMascot');
+    if (!mascot) return;
+    clearTimeout(reactionTimer);
+    mascot.className = `goth-bunny ${type}`;
+    if ($('reactionText')) $('reactionText').textContent = text || (type === 'sad' ? 'つぎは だいじょうぶ！' : 'やった！');
+    reactionTimer = setTimeout(() => {
+      mascot.className = 'goth-bunny idle';
+      if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
+    }, type === 'attack' ? 950 : 850);
+  }
+
+  function updateJourney(animate = true) {
+    const pct = Math.max(0, Math.min(100, (sessionCorrect / QUIZ_LENGTH) * 100));
+    const anchor = $('quizMascotAnchor');
+    const fill = $('journeyFill');
+    if (!anchor || !fill) return;
+    if (!animate) {
+      anchor.style.transition = 'none';
+      fill.style.transition = 'none';
+    }
+    anchor.style.left = `${pct}%`;
+    fill.style.width = `${pct}%`;
+    if (!animate) requestAnimationFrame(() => {
+      anchor.style.transition = '';
+      fill.style.transition = '';
     });
   }
 
@@ -271,6 +386,9 @@
     $('sessionStars').textContent = '0';
     $('comboCount').textContent = '0';
     $('comboBanner').classList.add('hidden');
+    if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
+    if ($('quizMascot')) $('quizMascot').className = 'goth-bunny idle';
+    updateJourney(false);
   }
 
   function startFreeQuiz() {
@@ -308,6 +426,7 @@
     quiz = buildQuiz(source, 'mix');
     if (stage.boss) {
       $('bossName').textContent = stage.title;
+      if ($('bossAvatar')) $('bossAvatar').textContent = stage.icon;
       $('bossHp').textContent = bossHp;
       $('bossBar').style.width = '100%';
       $('bossPanel').classList.remove('hidden');
@@ -406,6 +525,12 @@
       $('feedback').textContent = bonus ? `○ せいかい！ ⭐ +2` : '○ せいかい！ ⭐ +1';
       $('feedback').className = 'feedback good';
       playTone(true);
+      updateJourney(true);
+
+      const isBossNow = currentContext.type === 'stage' && STAGES[currentContext.stageIndex]?.boss;
+      if (isBossNow) setMascotReaction('attack', 'こうげき！');
+      else if (sessionCombo > 0 && sessionCombo % 5 === 0) setMascotReaction('celebrate', `${sessionCombo}コンボ！`);
+      else setMascotReaction('happy', 'せいかい！ やった！');
 
       if (currentContext.type === 'stage') {
         const stage = STAGES[currentContext.stageIndex];
@@ -429,6 +554,7 @@
       $('feedback').textContent = explanations[q.type] || 'おしい！';
       $('feedback').className = 'feedback bad';
       playTone(false);
+      setMascotReaction('sad', 'おしい！ つぎはいけるよ');
     }
 
     $('comboCount').textContent = sessionCombo;
@@ -514,9 +640,15 @@
     const nextBtn = $('nextStageBtn');
     if (stage && rating >= 1 && currentContext.stageIndex < STAGES.length - 1) {
       nextBtn.classList.remove('hidden');
-      nextBtn.textContent = STAGES[currentContext.stageIndex + 1].boss ? 'ボスに ちょうせん！' : 'つぎの ステージへ';
+      nextBtn.textContent = 'マップへ すすむ';
     } else {
       nextBtn.classList.add('hidden');
+    }
+
+    const resultMascot = $('resultMascot');
+    if (resultMascot) {
+      const cleared = rating === null ? sessionCorrect >= 7 : rating >= 1;
+      resultMascot.className = `goth-bunny result-bunny ${cleared ? 'victory' : 'sad'}`;
     }
 
     showView('resultView');
@@ -633,7 +765,7 @@
     });
   });
 
-  $('adventureBtn').addEventListener('click', () => { renderStageMap(); showView('stageView'); });
+  $('adventureBtn').addEventListener('click', () => { pendingMapMove = null; renderStageMap(); showView('stageView'); });
   $('stageBackBtn').addEventListener('click', () => { updateHome(); showView('homeView'); });
   $('freeBtn').addEventListener('click', startFreeQuiz);
   $('weakBtn').addEventListener('click', startWeakQuiz);
@@ -654,8 +786,12 @@
   $('retryBtn').addEventListener('click', retryCurrent);
   $('nextStageBtn').addEventListener('click', () => {
     if (lastContext.type !== 'stage') return;
-    const next = Math.min(STAGES.length - 1, lastContext.stageIndex + 1);
-    startStage(next);
+    const from = lastContext.stageIndex;
+    const to = Math.min(STAGES.length - 1, from + 1);
+    pendingMapMove = { from, to };
+    renderStageMap(pendingMapMove);
+    showView('stageView');
+    pendingMapMove = null;
   });
   $('homeBtn').addEventListener('click', () => { updateHome(); showView('homeView'); });
 

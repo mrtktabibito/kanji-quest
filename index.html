@@ -78,7 +78,7 @@
         </button>
       </div>
 
-      <footer>Kanji Quest V02.1 · v0.2.1</footer>
+      <footer>Kanji Quest V03 · v0.3.0</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -86,7 +86,21 @@
         <button id="stageBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
         <div><h2>ぼうけんマップ</h2><p>★1つで つぎへ すすめるよ</p></div>
       </header>
-      <div id="stageMap" class="stage-map"></div>
+      <section class="map-guide-card">
+        <div class="map-guide-copy">
+          <span class="tiny-label">あなたの ぼうけん</span>
+          <strong>うさぎと いっしょに すすもう！</strong>
+          <small>ステージを クリアすると つぎの マスへ あるくよ</small>
+        </div>
+        <div class="map-guide-mascot" aria-hidden="true">
+          <div class="goth-bunny mini idle">
+            <span class="bunny-ear ear-l"></span><span class="bunny-ear ear-r"></span>
+            <span class="bunny-head"><i class="eye eye-l"></i><i class="eye eye-r"></i><i class="mouth"></i><i class="cheek cheek-l"></i><i class="cheek cheek-r"></i></span>
+            <span class="bunny-bow"><i></i></span><span class="bunny-body"><i class="heart"></i></span>
+          </div>
+        </div>
+      </section>
+      <div id="stageMap" class="stage-map adventure-map"></div>
     </section>
 
     <section id="quizView" class="view" aria-label="クイズ">
@@ -102,8 +116,29 @@
         </div>
       </header>
 
+      <section id="questScene" class="quest-scene" aria-label="キャラクターの進み具合">
+        <div class="quest-scene-top">
+          <span class="tiny-label">うさぎの ぼうけん</span>
+          <span id="reactionText" class="reaction-text">いっしょに がんばろう！</span>
+        </div>
+        <div class="journey-lane">
+          <div class="journey-track"><div id="journeyFill" class="journey-fill"></div></div>
+          <div class="journey-goal">🏁</div>
+          <div id="quizMascotAnchor" class="quiz-mascot-anchor" style="left:0%" aria-hidden="true">
+            <div id="quizMascot" class="goth-bunny idle">
+              <span class="bunny-ear ear-l"></span><span class="bunny-ear ear-r"></span>
+              <span class="bunny-head"><i class="eye eye-l"></i><i class="eye eye-r"></i><i class="mouth"></i><i class="tear tear-l"></i><i class="tear tear-r"></i><i class="cheek cheek-l"></i><i class="cheek cheek-r"></i></span>
+              <span class="bunny-bow"><i></i></span><span class="bunny-body"><i class="heart"></i></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="bossPanel" class="boss-panel hidden" aria-label="ボスのHP">
-        <div><strong id="bossName">もじモンスター</strong><span>HP <b id="bossHp">6</b></span></div>
+        <div class="boss-head-row">
+          <div class="boss-identity"><span id="bossAvatar" class="boss-avatar">👾</span><strong id="bossName">もじモンスター</strong></div>
+          <span>HP <b id="bossHp">100</b></span>
+        </div>
         <div class="boss-track"><div id="bossBar" class="boss-bar"></div></div>
       </section>
 
@@ -123,6 +158,14 @@
 
     <section id="resultView" class="view" aria-label="結果">
       <div class="result-card">
+        <div class="result-mascot-stage" aria-hidden="true">
+          <div id="resultMascot" class="goth-bunny result-bunny idle">
+            <span class="bunny-ear ear-l"></span><span class="bunny-ear ear-r"></span>
+            <span class="bunny-head"><i class="eye eye-l"></i><i class="eye eye-r"></i><i class="mouth"></i><i class="tear tear-l"></i><i class="tear tear-r"></i><i class="cheek cheek-l"></i><i class="cheek cheek-r"></i></span>
+            <span class="bunny-bow"><i></i></span><span class="bunny-body"><i class="heart"></i></span>
+          </div>
+          <span class="result-sparkle s1">✦</span><span class="result-sparkle s2">★</span><span class="result-sparkle s3">✦</span>
+        </div>
         <div id="resultMedal" class="result-medal">★</div>
         <div id="resultEyebrow" class="eyebrow">けっか</div>
         <h2><span id="resultCorrect">0</span> / 10 せいかい！</h2>
