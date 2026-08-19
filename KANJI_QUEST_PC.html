@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="かんじクエスト" />
   <title>かんじクエスト</title>
 
-  <style>
+<style>
 :root {
   --bg: #f7f2fa;
   --panel: #ffffff;
@@ -742,7 +742,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .companion-stage-card small { display:none; }
 }
 
-  </style>
+</style>
 </head>
 <body>
   <main class="app-shell">
@@ -809,7 +809,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </button>
       </div>
 
-      <footer>Kanji Quest V06 · v0.6.0</footer>
+      <footer>Kanji Quest V06.1 · v0.6.1</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -963,7 +963,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
     </div>
   </main>
 
-  <script>
+<script>
 window.KANJI_DATA = [
   {k:'一', r:'いち'}, {k:'右', r:'みぎ'}, {k:'雨', r:'あめ'}, {k:'円', r:'えん'}, {k:'王', r:'おう'},
   {k:'音', r:'おと'}, {k:'下', r:'した'}, {k:'火', r:'ひ'}, {k:'花', r:'はな'}, {k:'貝', r:'かい'},
@@ -983,8 +983,8 @@ window.KANJI_DATA = [
   {k:'目', r:'め'}, {k:'立', r:'たつ'}, {k:'力', r:'ちから'}, {k:'林', r:'はやし'}, {k:'六', r:'ろく'}
 ];
 
-  </script>
-  <script>
+</script>
+<script>
 (() => {
   'use strict';
 
@@ -2097,13 +2097,13 @@ window.KANJI_DATA = [
   });
 
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js', { updateViaCache:'none' }).catch(() => {}));
   }
 
   decorateMascots();
   updateHome();
 })();
 
-  </script>
+</script>
 </body>
 </html>

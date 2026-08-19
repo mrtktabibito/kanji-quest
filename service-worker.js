@@ -1,6 +1,6 @@
-const CACHE = 'kanji-quest-v06-0.6.0';
+const CACHE = 'kanji-quest-v06-1-0.6.1';
 const ASSETS = [
-  './', './index.html', './style.css', './app.js', './questions.js', './manifest.json',
+  './', './index.html', './style_v061.css', './app_v061.js', './questions_v061.js', './manifest.json',
   './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'
 ];
 
@@ -18,9 +18,8 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-
   event.respondWith(
-    fetch(event.request)
+    fetch(new Request(event.request, { cache: 'no-store' }))
       .then(response => {
         if (response && response.status === 200) {
           const copy = response.clone();
