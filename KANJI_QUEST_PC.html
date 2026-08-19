@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
   <link rel="icon" href="icons/icon-192.png" />
-  <link rel="stylesheet" href="style_v07.css" />
+  <link rel="stylesheet" href="style_v071.css" />
   <title>かんじクエスト</title>
 </head>
 <body>
@@ -78,7 +78,7 @@
         </button>
       </div>
 
-      <footer>Kanji Quest V7 · v0.7.0</footer>
+      <footer>Kanji Quest V7.1 · v0.7.1</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -107,12 +107,12 @@
       <header class="quiz-topbar">
         <button id="quitBtn" class="icon-btn ghost" type="button" aria-label="クイズをやめる">×</button>
         <div class="progress-wrap" aria-label="進み具合">
-          <div class="progress-text"><span id="questionNo">1</span> / 10</div>
+          <div class="progress-text"><span id="progressWord">せいかい</span> <span id="questionNo">0</span> / 10 <small id="attemptNo">1もんめ</small></div>
           <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
         </div>
         <div class="quiz-status">
           <div class="combo-mini">🔥 <span id="comboCount">0</span></div>
-          <div class="mini-score">⭐ <span id="sessionStars">0</span></div>
+          <div id="wrongMini" class="wrong-mini">✕ <span id="wrongCount">0</span>/5</div><div class="mini-score">⭐ <span id="sessionStars">0</span></div>
         </div>
       </header>
 
@@ -198,7 +198,7 @@
     <section id="collectionView" class="view" aria-label="キャラクター図鑑">
       <header class="page-header">
         <button id="collectionBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
-        <div><h2>キャラクターずかん</h2><p>なかまを あつめて しょうかいを みよう</p></div>
+        <div><h2>キャラクターずかん</h2><p>10もん せいかいで 1たいずつ なかまを ふやそう</p></div>
       </header>
       <div id="collectionSummary" class="collection-summary"></div>
       <div id="collectionGrid" class="collection-grid encyclopedia-grid"></div>
@@ -239,7 +239,7 @@
     </div>
   </main>
 
-  <script src="questions_v07.js"></script>
-  <script src="app_v07.js"></script>
+  <script src="questions_v071.js"></script>
+  <script src="app_v071.js"></script>
 </body>
 </html>
