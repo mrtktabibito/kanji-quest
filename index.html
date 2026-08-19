@@ -78,7 +78,7 @@
         </button>
       </div>
 
-      <footer>Kanji Quest V04 · v0.4.0</footer>
+      <footer>Kanji Quest V05 · v0.5.0</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -119,7 +119,10 @@
       <section id="questScene" class="quest-scene" aria-label="キャラクターの進み具合">
         <div class="quest-scene-top">
           <span class="tiny-label">うさぎの ぼうけん</span>
-          <span id="reactionText" class="reaction-text">いっしょに がんばろう！</span>
+          <div class="quest-meta-right">
+            <span id="companionParty" class="companion-party" aria-label="なかま"></span>
+            <span id="reactionText" class="reaction-text">いっしょに がんばろう！</span>
+          </div>
         </div>
         <div class="journey-lane">
           <div class="journey-track"><div id="journeyFill" class="journey-fill"></div></div>
@@ -166,6 +169,7 @@
           </div>
           <span class="result-sparkle s1">✦</span><span class="result-sparkle s2">★</span><span class="result-sparkle s3">✦</span>
         </div>
+        <div id="resultCompanions" class="result-companions" aria-label="いっしょにぼうけんしたなかま"></div>
         <div id="resultMedal" class="result-medal">★</div>
         <div id="resultEyebrow" class="eyebrow">けっか</div>
         <h2><span id="resultCorrect">0</span> / 10 せいかい！</h2>

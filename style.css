@@ -414,7 +414,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 @keyframes mascotArrive { from{opacity:0;transform:translate(-50%,-120%) scale(.65)} to{opacity:1;transform:translate(-50%,-89%) scale(1)} }
 
 /* Quiz journey strip */
-.quest-scene { margin:-2px 0 10px; padding:10px 12px 8px; border-radius:18px; background:rgba(255,255,255,.78); border:1px solid rgba(123,69,143,.08); box-shadow:0 7px 22px rgba(73,39,87,.07); position:relative; overflow:hidden; }
+.quest-scene { margin:-2px 0 10px; padding:10px 12px 8px; border-radius:18px; background:rgba(255,255,255,.78); border:1px solid rgba(123,69,143,.08); box-shadow:0 7px 22px rgba(73,39,87,.07); position:relative; overflow:visible; }
 .quest-scene::after { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.18), transparent 55%); opacity:0; pointer-events:none; }
 .quest-scene.fx-happy::after, .quest-scene.fx-celebrate::after { animation:sceneFlash .9s ease; }
 .quest-scene.fx-sad::after { animation:sceneSad .9s ease; }
@@ -427,7 +427,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 .journey-track::after { content:"✦  ·  ✦  ·  ✦  ·  ✦"; position:absolute; left:12%; right:10%; top:-16px; text-align:center; color:#cab0d5; font-size:8px; letter-spacing:.5em; white-space:nowrap; }
 .journey-goal { position:absolute; right:0; top:15px; font-size:25px; }
 .quiz-mascot-anchor { position:absolute; z-index:4; left:0%; top:0; width:58px; height:64px; transform:translateX(-18px); transition:left .5s cubic-bezier(.2,.8,.25,1); }
-.quiz-mascot-anchor .goth-bunny { --bun-scale:.82; }
+.quiz-mascot-anchor .goth-bunny { --bun-scale:.82; transform-origin:50% 0; }
 
 /* Mascot reaction animations */
 .goth-bunny.idle { animation:bunnyIdle 1.6s ease-in-out infinite; }
@@ -497,12 +497,12 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .quest-scene { flex:0 0 auto; padding:5px 8px 4px; margin:0 0 6px; border-radius:15px; min-height:66px; }
   .quest-scene-top .tiny-label { font-size:7px; }
   .reaction-text { font-size:7.5px; }
-  .journey-lane { height:40px; margin-top:0; }
+  .journey-lane { height:44px; margin-top:0; }
   .journey-track { top:23px; left:16px; right:22px; height:5px; }
   .journey-track::after { display:none; }
   .journey-goal { top:4px; font-size:20px; }
-  .quiz-mascot-anchor { width:46px; height:48px; transform:translateX(-14px); }
-  .quiz-mascot-anchor .goth-bunny { --bun-scale:.57; }
+  .quiz-mascot-anchor { width:46px; height:48px; transform:translateX(-14px); top:-2px; }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.62; transform-origin:50% 0; }
   .boss-panel { flex:0 0 auto; margin:0 0 6px; padding:7px 10px; border-radius:13px; }
   .boss-avatar { width:25px; height:25px; font-size:16px; }
   .boss-track { margin-top:5px; height:6px; }
@@ -547,7 +547,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .journey-lane { height:34px; }
   .journey-track { top:19px; }
   .journey-goal { top:1px; }
-  .quiz-mascot-anchor .goth-bunny { --bun-scale:.49; }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.54; transform-origin:50% 0; }
   .question-card { min-height:112px; max-height:138px; padding:8px 10px; }
   .question-main { font-size:clamp(40px,12vw,56px); }
   .answer-btn { min-height:41px; font-size:17px; }
@@ -581,6 +581,30 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 @keyframes hitText { 0%{opacity:0;transform:translateY(-50%) scale(.45)} 25%{opacity:1;transform:translateY(-70%) scale(1.18)} 100%{opacity:0;transform:translateY(-105%) scale(.92)} }
 @keyframes bossDefeatPanel { 0%{filter:none;opacity:1;transform:none} 22%{filter:brightness(1.8);transform:translateX(-7px)} 40%{transform:translateX(7px)} 62%{filter:brightness(1);transform:translateY(-4px) scale(1.01)} 100%{filter:grayscale(.5);opacity:.42;transform:translateY(7px) scale(.96)} }
 @keyframes bossAvatarKO { 0%{transform:none;opacity:1} 35%{transform:translateX(13px) translateY(-10px) rotate(28deg) scale(1.15)} 72%{transform:translateX(28px) translateY(5px) rotate(65deg) scale(.72);opacity:.8} 100%{transform:translateX(42px) translateY(18px) rotate(95deg) scale(.35);opacity:0} }
+
+/* V05 companions + high difficulty compound questions */
+.quest-meta-right { display:flex; align-items:center; justify-content:flex-end; gap:6px; min-width:0; }
+.companion-party { display:inline-flex; align-items:center; gap:2px; white-space:nowrap; }
+.companion-party b { font-size:7px; color:#9a83a4; margin-right:1px; }
+.companion-chip { width:20px; height:20px; display:grid; place-items:center; border-radius:50%; background:#fff; border:1px solid #eadcf2; box-shadow:0 2px 6px rgba(73,39,87,.09); font-size:12px; }
+.companion-party.party-cheer .companion-chip { animation:companionCheer .45s ease 2; }
+.companion-party.party-sad .companion-chip { animation:companionSad .55s ease 1; }
+@keyframes companionCheer { 45%{transform:translateY(-5px) rotate(-6deg) scale(1.12)} 70%{transform:translateY(-2px) rotate(6deg)} }
+@keyframes companionSad { 35%{transform:translateY(2px) rotate(-5deg)} 65%{transform:translateY(2px) rotate(5deg)} }
+.result-companions { min-height:22px; margin:2px auto 4px; display:flex; justify-content:center; align-items:center; gap:4px; color:var(--muted); font-size:8px; font-weight:900; }
+.result-companions .companion-chip { width:23px; height:23px; font-size:14px; }
+.question-main.compound-prompt { font-size:clamp(42px, 13vw, 72px); letter-spacing:.03em; }
+.question-main.compound-reading-prompt { font-size:clamp(28px, 9vw, 48px); }
+.question-kind { white-space:nowrap; }
+@media (max-width:430px) {
+  .quest-scene-top { align-items:flex-start; }
+  .quest-meta-right { gap:4px; }
+  .companion-party b { display:none; }
+  .companion-chip { width:17px; height:17px; font-size:10px; }
+  .reaction-text { max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .question-main.compound-prompt { font-size:clamp(34px, 11vw, 52px); }
+  .question-main.compound-reading-prompt { font-size:clamp(22px, 7.5vw, 34px); }
+}
 @media (prefers-reduced-motion: reduce) {
   .goth-bunny,.map-node.current .map-node-icon,.result-sparkle { animation:none !important; }
   .map-mascot-anchor,.quiz-mascot-anchor,.journey-fill { transition:none !important; }

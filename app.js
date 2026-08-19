@@ -40,12 +40,33 @@
   const PICTURES = {
     '山':'🏔️','木':'🌳','林':'🌳🌳','森':'🌳🌳🌳','花':'🌸','草':'🌱','竹':'🎋','石':'🪨','雨':'🌧️',
     '日':'☀️','月':'🌙','火':'🔥','水':'💧','犬':'🐶','虫':'🐛','貝':'🐚','車':'🚗','糸':'🧵',
-    '目':'👁️','耳':'👂','手':'✋','足':'🦶','口':'👄','金':'🪙','王':'👑','音':'🎵','本':'📖'
+    '目':'👁️','耳':'👂','手':'✋','足':'🦶','口':'👄','金':'💴','王':'👑','音':'🎵','本':'📖'
   };
 
   const OPPOSITES = {
     '上':'下','下':'上','左':'右','右':'左','大':'小','小':'大','入':'出','出':'入','男':'女','女':'男'
   };
+
+  // 小学1年生の配当漢字だけで作る熟語。level 3 は後半・最終ボス向け。
+  const COMPOUNDS = [
+    {w:'学校',r:'がっこう',level:1},{w:'学生',r:'がくせい',level:1},{w:'先生',r:'せんせい',level:1},
+    {w:'小学校',r:'しょうがっこう',level:2},{w:'小学生',r:'しょうがくせい',level:2},{w:'一年生',r:'いちねんせい',level:2},
+    {w:'大人',r:'おとな',level:1},{w:'火山',r:'かざん',level:1},{w:'花火',r:'はなび',level:1},{w:'青空',r:'あおぞら',level:1},
+    {w:'森林',r:'しんりん',level:2},{w:'竹林',r:'ちくりん',level:2},{w:'草木',r:'くさき',level:1},{w:'水田',r:'すいでん',level:2},
+    {w:'天気',r:'てんき',level:1},{w:'空気',r:'くうき',level:2},{w:'人気',r:'にんき',level:2},
+    {w:'入口',r:'いりぐち',level:1},{w:'出口',r:'でぐち',level:1},{w:'出入口',r:'でいりぐち',level:2},
+    {w:'左右',r:'さゆう',level:2},{w:'上下',r:'じょうげ',level:2},{w:'男女',r:'だんじょ',level:2},{w:'大小',r:'だいしょう',level:2},
+    {w:'中学',r:'ちゅうがく',level:2},{w:'正月',r:'しょうがつ',level:1},{w:'日本',r:'にほん',level:1},{w:'日本人',r:'にほんじん',level:2},
+    {w:'本文',r:'ほんぶん',level:2},{w:'文字',r:'もじ',level:1},{w:'名人',r:'めいじん',level:2},{w:'本名',r:'ほんみょう',level:2},
+    {w:'年上',r:'としうえ',level:1},{w:'年下',r:'としした',level:1},{w:'左手',r:'ひだりて',level:1},{w:'右手',r:'みぎて',level:1},
+    {w:'手足',r:'てあし',level:1},{w:'足音',r:'あしおと',level:1},{w:'目玉',r:'めだま',level:1},{w:'白目',r:'しろめ',level:2},
+    {w:'赤字',r:'あかじ',level:2},{w:'青虫',r:'あおむし',level:1},{w:'火口',r:'かこう',level:2},{w:'上空',r:'じょうくう',level:2},
+    {w:'水中',r:'すいちゅう',level:2},{w:'空中',r:'くうちゅう',level:2},{w:'車中',r:'しゃちゅう',level:2},
+    {w:'人力',r:'じんりき',level:2},{w:'水力',r:'すいりょく',level:2},{w:'火力',r:'かりょく',level:2},
+    {w:'休日',r:'きゅうじつ',level:2},{w:'見学',r:'けんがく',level:2},{w:'早口',r:'はやくち',level:1},{w:'月日',r:'つきひ',level:1},
+    {w:'先月',r:'せんげつ',level:2},{w:'先日',r:'せんじつ',level:2},{w:'本日',r:'ほんじつ',level:3},{w:'年中',r:'ねんじゅう',level:2},
+    {w:'生年月日',r:'せいねんがっぴ',level:3}
+  ];
 
   const COLLECTIONS = [
     { id:'egg', need:0, icon:'🥚', name:'まほうのたまご', desc:'ぼうけんの はじまり' },
@@ -186,6 +207,57 @@
     return COLLECTIONS.filter(c => stars >= c.need);
   }
 
+  function renderCompanions() {
+    const unlocked = getUnlockedCollections();
+    const visible = unlocked.filter(c => c.id !== 'egg');
+    const party = visible.length ? visible.slice(-4) : unlocked.filter(c => c.id === 'egg');
+    const html = party.map(c => `<span class="companion-chip" title="${c.name}">${c.icon}</span>`).join('');
+    const q = $('companionParty');
+    if (q) q.innerHTML = html ? `<b>なかま</b>${html}` : '';
+    const r = $('resultCompanions');
+    if (r) r.innerHTML = html ? `<span>いっしょに ぼうけん</span>${html}` : '';
+  }
+
+  function knownCharsForStage(stageIndex) {
+    const chars = new Set();
+    STAGES.slice(0, stageIndex + 1).forEach(stage => {
+      const src = stage.boss ? stage.pool : stage.kanji;
+      [...(src || '')].forEach(k => { if (getItem(k)) chars.add(k); });
+    });
+    return chars;
+  }
+
+  function compoundSettings() {
+    if (currentContext.type === 'weak') return { count:0, level:1, chars:new Set() };
+    if (currentContext.type === 'free') return { count:selectedMode === 'mix' ? 2 : 0, level:2, chars:new Set(DATA.map(x => x.k)) };
+    if (currentContext.type !== 'stage') return { count:0, level:1, chars:new Set() };
+    const i = currentContext.stageIndex;
+    const counts = [0,0,1,1,2,2,2,3,3,4];
+    return { count:counts[i] || 0, level:i >= 8 ? 3 : i >= 3 ? 2 : 1, chars:knownCharsForStage(i) };
+  }
+
+  function usableCompounds(settings) {
+    return COMPOUNDS.filter(c => c.level <= settings.level && [...c.w].every(k => settings.chars.has(k)));
+  }
+
+  function makeCompoundQuestion(compound, pool) {
+    const readingType = Math.random() < 0.5;
+    const other = pool.filter(x => x.w !== compound.w);
+    const statKeys = [...new Set([...compound.w])].filter(k => !!getItem(k));
+    if (readingType) {
+      return {
+        item:getItem(statKeys[0]) || DATA[0], statKeys, type:'compoundReading', difficulty:compound.level,
+        prompt:compound.w, answer:compound.r,
+        options:makeUniqueOptions(compound.r, other.map(x => x.r))
+      };
+    }
+    return {
+      item:getItem(statKeys[0]) || DATA[0], statKeys, type:'compoundKanji', difficulty:compound.level,
+      prompt:compound.r, answer:compound.w,
+      options:makeUniqueOptions(compound.w, other.map(x => x.w))
+    };
+  }
+
   function updateHome() {
     $('starCount').textContent = state.stars;
     const weak = getWeakItems();
@@ -195,6 +267,7 @@
     $('soundBtn').classList.toggle('off', !state.sound);
     $('soundBtn').textContent = state.sound ? '♪' : '×';
     $('collectionMini').textContent = `${getUnlockedCollections().length} / ${COLLECTIONS.length}`;
+    renderCompanions();
 
     const idx = getNextStageIndex();
     const stage = STAGES[idx];
@@ -310,8 +383,13 @@
   function setMascotReaction(type, text = '') {
     const mascot = $('quizMascot');
     const scene = $('questScene');
+    const party = $('companionParty');
     if (!mascot) return;
     clearTimeout(reactionTimer);
+    if (party) {
+      party.classList.remove('party-cheer','party-sad');
+      party.classList.add(type === 'sad' ? 'party-sad' : 'party-cheer');
+    }
     mascot.className = `goth-bunny ${type}`;
     if (scene) {
       scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
@@ -329,6 +407,7 @@
     reactionTimer = setTimeout(() => {
       mascot.className = 'goth-bunny idle';
       if (scene) scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
+      if (party) party.classList.remove('party-cheer','party-sad');
       if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
     }, type === 'attack' ? 1100 : type === 'celebrate' ? 1200 : 980);
   }
@@ -452,7 +531,16 @@
       picked.push(next);
       pool = pool.filter(x => x.k !== next.k);
     }
-    return picked.map(item => makeQuestion(item, sourceItems, mode));
+    const result = picked.map(item => makeQuestion(item, sourceItems, mode));
+
+    const settings = compoundSettings();
+    const cpool = usableCompounds(settings);
+    if (settings.count > 0 && cpool.length >= 3) {
+      const chosen = shuffle(cpool).slice(0, Math.min(settings.count, cpool.length));
+      const positions = shuffle([...Array(QUIZ_LENGTH).keys()]).slice(0, chosen.length);
+      chosen.forEach((c, n) => { result[positions[n]] = makeCompoundQuestion(c, cpool); });
+    }
+    return result;
   }
 
   function resetSession() {
@@ -551,6 +639,18 @@
       $('questionVisual').classList.remove('hidden');
       $('questionMain').textContent = '';
       $('questionSub').textContent = 'ひとつ えらんでね';
+    } else if (q.type === 'compoundReading') {
+      $('questionKind').textContent = `じゅくご ★${q.difficulty >= 3 ? '★★' : q.difficulty >= 2 ? '★' : ''}`;
+      $('questionLead').textContent = 'この じゅくごは なんて よむ？';
+      $('questionMain').textContent = q.prompt;
+      $('questionMain').classList.add('compound-prompt');
+      $('questionSub').textContent = 'むずかしい もんだい！';
+    } else if (q.type === 'compoundKanji') {
+      $('questionKind').textContent = `じゅくご ★${q.difficulty >= 3 ? '★★' : q.difficulty >= 2 ? '★' : ''}`;
+      $('questionLead').textContent = 'この よみかたの じゅくごは どれ？';
+      $('questionMain').textContent = q.prompt;
+      $('questionMain').classList.add('reading-prompt','compound-reading-prompt');
+      $('questionSub').textContent = 'むずかしい もんだい！';
     } else {
       $('questionKind').textContent = 'はんたいことば';
       $('questionLead').textContent = 'はんたいの いみの かんじは どれ？';
@@ -581,7 +681,7 @@
 
     const q = quiz[quizIndex];
     const correct = option === q.answer;
-    const stat = getStat(q.item.k);
+    const statKeys = q.statKeys?.length ? q.statKeys : [q.item.k];
     state.totalAnswered += 1;
 
     const buttons = [...$('answers').querySelectorAll('.answer-btn')];
@@ -592,7 +692,7 @@
     });
 
     if (correct) {
-      stat.c += 1;
+      statKeys.forEach(k => { getStat(k).c += 1; });
       state.totalCorrect += 1;
       state.stars += 1;
       sessionCorrect += 1;
@@ -630,7 +730,7 @@
         }
       }
     } else {
-      stat.w += 1;
+      statKeys.forEach(k => { getStat(k).w += 1; });
       sessionCombo = 0;
       clickedBtn.classList.remove('dim');
       clickedBtn.classList.add('wrong');
@@ -638,6 +738,8 @@
         reading:`おしい！ 「${q.item.k}」は「${q.item.r}」だよ`,
         kanji:`おしい！ 「${q.item.r}」は「${q.item.k}」だよ`,
         picture:`おしい！ この えは「${q.item.k}」だよ`,
+        compoundReading:`おしい！ 「${q.prompt}」は「${q.answer}」と よむよ`,
+        compoundKanji:`おしい！ 「${q.prompt}」は「${q.answer}」だよ`,
         opposite:`おしい！ 「${q.item.k}」の はんたいは「${q.answer}」だよ`
       };
       $('feedback').textContent = explanations[q.type] || 'おしい！';

@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="かんじクエスト" />
   <title>かんじクエスト</title>
 
-  <style>
+<style>
 :root {
   --bg: #f7f2fa;
   --panel: #ffffff;
@@ -426,7 +426,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 @keyframes mascotArrive { from{opacity:0;transform:translate(-50%,-120%) scale(.65)} to{opacity:1;transform:translate(-50%,-89%) scale(1)} }
 
 /* Quiz journey strip */
-.quest-scene { margin:-2px 0 10px; padding:10px 12px 8px; border-radius:18px; background:rgba(255,255,255,.78); border:1px solid rgba(123,69,143,.08); box-shadow:0 7px 22px rgba(73,39,87,.07); position:relative; overflow:hidden; }
+.quest-scene { margin:-2px 0 10px; padding:10px 12px 8px; border-radius:18px; background:rgba(255,255,255,.78); border:1px solid rgba(123,69,143,.08); box-shadow:0 7px 22px rgba(73,39,87,.07); position:relative; overflow:visible; }
 .quest-scene::after { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.18), transparent 55%); opacity:0; pointer-events:none; }
 .quest-scene.fx-happy::after, .quest-scene.fx-celebrate::after { animation:sceneFlash .9s ease; }
 .quest-scene.fx-sad::after { animation:sceneSad .9s ease; }
@@ -439,7 +439,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 .journey-track::after { content:"✦  ·  ✦  ·  ✦  ·  ✦"; position:absolute; left:12%; right:10%; top:-16px; text-align:center; color:#cab0d5; font-size:8px; letter-spacing:.5em; white-space:nowrap; }
 .journey-goal { position:absolute; right:0; top:15px; font-size:25px; }
 .quiz-mascot-anchor { position:absolute; z-index:4; left:0%; top:0; width:58px; height:64px; transform:translateX(-18px); transition:left .5s cubic-bezier(.2,.8,.25,1); }
-.quiz-mascot-anchor .goth-bunny { --bun-scale:.82; }
+.quiz-mascot-anchor .goth-bunny { --bun-scale:.82; transform-origin:50% 0; }
 
 /* Mascot reaction animations */
 .goth-bunny.idle { animation:bunnyIdle 1.6s ease-in-out infinite; }
@@ -509,12 +509,12 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .quest-scene { flex:0 0 auto; padding:5px 8px 4px; margin:0 0 6px; border-radius:15px; min-height:66px; }
   .quest-scene-top .tiny-label { font-size:7px; }
   .reaction-text { font-size:7.5px; }
-  .journey-lane { height:40px; margin-top:0; }
+  .journey-lane { height:44px; margin-top:0; }
   .journey-track { top:23px; left:16px; right:22px; height:5px; }
   .journey-track::after { display:none; }
   .journey-goal { top:4px; font-size:20px; }
-  .quiz-mascot-anchor { width:46px; height:48px; transform:translateX(-14px); }
-  .quiz-mascot-anchor .goth-bunny { --bun-scale:.57; }
+  .quiz-mascot-anchor { width:46px; height:48px; transform:translateX(-14px); top:-2px; }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.62; transform-origin:50% 0; }
   .boss-panel { flex:0 0 auto; margin:0 0 6px; padding:7px 10px; border-radius:13px; }
   .boss-avatar { width:25px; height:25px; font-size:16px; }
   .boss-track { margin-top:5px; height:6px; }
@@ -559,7 +559,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .journey-lane { height:34px; }
   .journey-track { top:19px; }
   .journey-goal { top:1px; }
-  .quiz-mascot-anchor .goth-bunny { --bun-scale:.49; }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.54; transform-origin:50% 0; }
   .question-card { min-height:112px; max-height:138px; padding:8px 10px; }
   .question-main { font-size:clamp(40px,12vw,56px); }
   .answer-btn { min-height:41px; font-size:17px; }
@@ -593,6 +593,30 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 @keyframes hitText { 0%{opacity:0;transform:translateY(-50%) scale(.45)} 25%{opacity:1;transform:translateY(-70%) scale(1.18)} 100%{opacity:0;transform:translateY(-105%) scale(.92)} }
 @keyframes bossDefeatPanel { 0%{filter:none;opacity:1;transform:none} 22%{filter:brightness(1.8);transform:translateX(-7px)} 40%{transform:translateX(7px)} 62%{filter:brightness(1);transform:translateY(-4px) scale(1.01)} 100%{filter:grayscale(.5);opacity:.42;transform:translateY(7px) scale(.96)} }
 @keyframes bossAvatarKO { 0%{transform:none;opacity:1} 35%{transform:translateX(13px) translateY(-10px) rotate(28deg) scale(1.15)} 72%{transform:translateX(28px) translateY(5px) rotate(65deg) scale(.72);opacity:.8} 100%{transform:translateX(42px) translateY(18px) rotate(95deg) scale(.35);opacity:0} }
+
+/* V05 companions + high difficulty compound questions */
+.quest-meta-right { display:flex; align-items:center; justify-content:flex-end; gap:6px; min-width:0; }
+.companion-party { display:inline-flex; align-items:center; gap:2px; white-space:nowrap; }
+.companion-party b { font-size:7px; color:#9a83a4; margin-right:1px; }
+.companion-chip { width:20px; height:20px; display:grid; place-items:center; border-radius:50%; background:#fff; border:1px solid #eadcf2; box-shadow:0 2px 6px rgba(73,39,87,.09); font-size:12px; }
+.companion-party.party-cheer .companion-chip { animation:companionCheer .45s ease 2; }
+.companion-party.party-sad .companion-chip { animation:companionSad .55s ease 1; }
+@keyframes companionCheer { 45%{transform:translateY(-5px) rotate(-6deg) scale(1.12)} 70%{transform:translateY(-2px) rotate(6deg)} }
+@keyframes companionSad { 35%{transform:translateY(2px) rotate(-5deg)} 65%{transform:translateY(2px) rotate(5deg)} }
+.result-companions { min-height:22px; margin:2px auto 4px; display:flex; justify-content:center; align-items:center; gap:4px; color:var(--muted); font-size:8px; font-weight:900; }
+.result-companions .companion-chip { width:23px; height:23px; font-size:14px; }
+.question-main.compound-prompt { font-size:clamp(42px, 13vw, 72px); letter-spacing:.03em; }
+.question-main.compound-reading-prompt { font-size:clamp(28px, 9vw, 48px); }
+.question-kind { white-space:nowrap; }
+@media (max-width:430px) {
+  .quest-scene-top { align-items:flex-start; }
+  .quest-meta-right { gap:4px; }
+  .companion-party b { display:none; }
+  .companion-chip { width:17px; height:17px; font-size:10px; }
+  .reaction-text { max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .question-main.compound-prompt { font-size:clamp(34px, 11vw, 52px); }
+  .question-main.compound-reading-prompt { font-size:clamp(22px, 7.5vw, 34px); }
+}
 @media (prefers-reduced-motion: reduce) {
   .goth-bunny,.map-node.current .map-node-icon,.result-sparkle { animation:none !important; }
   .map-mascot-anchor,.quiz-mascot-anchor,.journey-fill { transition:none !important; }
@@ -600,7 +624,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 
 .result-bunny.sad ~ .result-sparkle { display:none; }
 
-  </style>
+</style>
 </head>
 <body>
   <main class="app-shell">
@@ -667,7 +691,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </button>
       </div>
 
-      <footer>Kanji Quest V04 · v0.4.0</footer>
+      <footer>Kanji Quest V05 · v0.5.0</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -708,7 +732,10 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
       <section id="questScene" class="quest-scene" aria-label="キャラクターの進み具合">
         <div class="quest-scene-top">
           <span class="tiny-label">うさぎの ぼうけん</span>
-          <span id="reactionText" class="reaction-text">いっしょに がんばろう！</span>
+          <div class="quest-meta-right">
+            <span id="companionParty" class="companion-party" aria-label="なかま"></span>
+            <span id="reactionText" class="reaction-text">いっしょに がんばろう！</span>
+          </div>
         </div>
         <div class="journey-lane">
           <div class="journey-track"><div id="journeyFill" class="journey-fill"></div></div>
@@ -755,6 +782,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
           </div>
           <span class="result-sparkle s1">✦</span><span class="result-sparkle s2">★</span><span class="result-sparkle s3">✦</span>
         </div>
+        <div id="resultCompanions" class="result-companions" aria-label="いっしょにぼうけんしたなかま"></div>
         <div id="resultMedal" class="result-medal">★</div>
         <div id="resultEyebrow" class="eyebrow">けっか</div>
         <h2><span id="resultCorrect">0</span> / 10 せいかい！</h2>
@@ -815,7 +843,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
     </div>
   </main>
 
-  <script>
+<script>
 window.KANJI_DATA = [
   {k:'一', r:'いち'}, {k:'右', r:'みぎ'}, {k:'雨', r:'あめ'}, {k:'円', r:'えん'}, {k:'王', r:'おう'},
   {k:'音', r:'おと'}, {k:'下', r:'した'}, {k:'火', r:'ひ'}, {k:'花', r:'はな'}, {k:'貝', r:'かい'},
@@ -835,8 +863,8 @@ window.KANJI_DATA = [
   {k:'目', r:'め'}, {k:'立', r:'たつ'}, {k:'力', r:'ちから'}, {k:'林', r:'はやし'}, {k:'六', r:'ろく'}
 ];
 
-  </script>
-  <script>
+</script>
+<script>
 (() => {
   'use strict';
 
@@ -879,12 +907,33 @@ window.KANJI_DATA = [
   const PICTURES = {
     '山':'🏔️','木':'🌳','林':'🌳🌳','森':'🌳🌳🌳','花':'🌸','草':'🌱','竹':'🎋','石':'🪨','雨':'🌧️',
     '日':'☀️','月':'🌙','火':'🔥','水':'💧','犬':'🐶','虫':'🐛','貝':'🐚','車':'🚗','糸':'🧵',
-    '目':'👁️','耳':'👂','手':'✋','足':'🦶','口':'👄','金':'🪙','王':'👑','音':'🎵','本':'📖'
+    '目':'👁️','耳':'👂','手':'✋','足':'🦶','口':'👄','金':'💴','王':'👑','音':'🎵','本':'📖'
   };
 
   const OPPOSITES = {
     '上':'下','下':'上','左':'右','右':'左','大':'小','小':'大','入':'出','出':'入','男':'女','女':'男'
   };
+
+  // 小学1年生の配当漢字だけで作る熟語。level 3 は後半・最終ボス向け。
+  const COMPOUNDS = [
+    {w:'学校',r:'がっこう',level:1},{w:'学生',r:'がくせい',level:1},{w:'先生',r:'せんせい',level:1},
+    {w:'小学校',r:'しょうがっこう',level:2},{w:'小学生',r:'しょうがくせい',level:2},{w:'一年生',r:'いちねんせい',level:2},
+    {w:'大人',r:'おとな',level:1},{w:'火山',r:'かざん',level:1},{w:'花火',r:'はなび',level:1},{w:'青空',r:'あおぞら',level:1},
+    {w:'森林',r:'しんりん',level:2},{w:'竹林',r:'ちくりん',level:2},{w:'草木',r:'くさき',level:1},{w:'水田',r:'すいでん',level:2},
+    {w:'天気',r:'てんき',level:1},{w:'空気',r:'くうき',level:2},{w:'人気',r:'にんき',level:2},
+    {w:'入口',r:'いりぐち',level:1},{w:'出口',r:'でぐち',level:1},{w:'出入口',r:'でいりぐち',level:2},
+    {w:'左右',r:'さゆう',level:2},{w:'上下',r:'じょうげ',level:2},{w:'男女',r:'だんじょ',level:2},{w:'大小',r:'だいしょう',level:2},
+    {w:'中学',r:'ちゅうがく',level:2},{w:'正月',r:'しょうがつ',level:1},{w:'日本',r:'にほん',level:1},{w:'日本人',r:'にほんじん',level:2},
+    {w:'本文',r:'ほんぶん',level:2},{w:'文字',r:'もじ',level:1},{w:'名人',r:'めいじん',level:2},{w:'本名',r:'ほんみょう',level:2},
+    {w:'年上',r:'としうえ',level:1},{w:'年下',r:'としした',level:1},{w:'左手',r:'ひだりて',level:1},{w:'右手',r:'みぎて',level:1},
+    {w:'手足',r:'てあし',level:1},{w:'足音',r:'あしおと',level:1},{w:'目玉',r:'めだま',level:1},{w:'白目',r:'しろめ',level:2},
+    {w:'赤字',r:'あかじ',level:2},{w:'青虫',r:'あおむし',level:1},{w:'火口',r:'かこう',level:2},{w:'上空',r:'じょうくう',level:2},
+    {w:'水中',r:'すいちゅう',level:2},{w:'空中',r:'くうちゅう',level:2},{w:'車中',r:'しゃちゅう',level:2},
+    {w:'人力',r:'じんりき',level:2},{w:'水力',r:'すいりょく',level:2},{w:'火力',r:'かりょく',level:2},
+    {w:'休日',r:'きゅうじつ',level:2},{w:'見学',r:'けんがく',level:2},{w:'早口',r:'はやくち',level:1},{w:'月日',r:'つきひ',level:1},
+    {w:'先月',r:'せんげつ',level:2},{w:'先日',r:'せんじつ',level:2},{w:'本日',r:'ほんじつ',level:3},{w:'年中',r:'ねんじゅう',level:2},
+    {w:'生年月日',r:'せいねんがっぴ',level:3}
+  ];
 
   const COLLECTIONS = [
     { id:'egg', need:0, icon:'🥚', name:'まほうのたまご', desc:'ぼうけんの はじまり' },
@@ -1025,6 +1074,57 @@ window.KANJI_DATA = [
     return COLLECTIONS.filter(c => stars >= c.need);
   }
 
+  function renderCompanions() {
+    const unlocked = getUnlockedCollections();
+    const visible = unlocked.filter(c => c.id !== 'egg');
+    const party = visible.length ? visible.slice(-4) : unlocked.filter(c => c.id === 'egg');
+    const html = party.map(c => `<span class="companion-chip" title="${c.name}">${c.icon}</span>`).join('');
+    const q = $('companionParty');
+    if (q) q.innerHTML = html ? `<b>なかま</b>${html}` : '';
+    const r = $('resultCompanions');
+    if (r) r.innerHTML = html ? `<span>いっしょに ぼうけん</span>${html}` : '';
+  }
+
+  function knownCharsForStage(stageIndex) {
+    const chars = new Set();
+    STAGES.slice(0, stageIndex + 1).forEach(stage => {
+      const src = stage.boss ? stage.pool : stage.kanji;
+      [...(src || '')].forEach(k => { if (getItem(k)) chars.add(k); });
+    });
+    return chars;
+  }
+
+  function compoundSettings() {
+    if (currentContext.type === 'weak') return { count:0, level:1, chars:new Set() };
+    if (currentContext.type === 'free') return { count:selectedMode === 'mix' ? 2 : 0, level:2, chars:new Set(DATA.map(x => x.k)) };
+    if (currentContext.type !== 'stage') return { count:0, level:1, chars:new Set() };
+    const i = currentContext.stageIndex;
+    const counts = [0,0,1,1,2,2,2,3,3,4];
+    return { count:counts[i] || 0, level:i >= 8 ? 3 : i >= 3 ? 2 : 1, chars:knownCharsForStage(i) };
+  }
+
+  function usableCompounds(settings) {
+    return COMPOUNDS.filter(c => c.level <= settings.level && [...c.w].every(k => settings.chars.has(k)));
+  }
+
+  function makeCompoundQuestion(compound, pool) {
+    const readingType = Math.random() < 0.5;
+    const other = pool.filter(x => x.w !== compound.w);
+    const statKeys = [...new Set([...compound.w])].filter(k => !!getItem(k));
+    if (readingType) {
+      return {
+        item:getItem(statKeys[0]) || DATA[0], statKeys, type:'compoundReading', difficulty:compound.level,
+        prompt:compound.w, answer:compound.r,
+        options:makeUniqueOptions(compound.r, other.map(x => x.r))
+      };
+    }
+    return {
+      item:getItem(statKeys[0]) || DATA[0], statKeys, type:'compoundKanji', difficulty:compound.level,
+      prompt:compound.r, answer:compound.w,
+      options:makeUniqueOptions(compound.w, other.map(x => x.w))
+    };
+  }
+
   function updateHome() {
     $('starCount').textContent = state.stars;
     const weak = getWeakItems();
@@ -1034,6 +1134,7 @@ window.KANJI_DATA = [
     $('soundBtn').classList.toggle('off', !state.sound);
     $('soundBtn').textContent = state.sound ? '♪' : '×';
     $('collectionMini').textContent = `${getUnlockedCollections().length} / ${COLLECTIONS.length}`;
+    renderCompanions();
 
     const idx = getNextStageIndex();
     const stage = STAGES[idx];
@@ -1149,8 +1250,13 @@ window.KANJI_DATA = [
   function setMascotReaction(type, text = '') {
     const mascot = $('quizMascot');
     const scene = $('questScene');
+    const party = $('companionParty');
     if (!mascot) return;
     clearTimeout(reactionTimer);
+    if (party) {
+      party.classList.remove('party-cheer','party-sad');
+      party.classList.add(type === 'sad' ? 'party-sad' : 'party-cheer');
+    }
     mascot.className = `goth-bunny ${type}`;
     if (scene) {
       scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
@@ -1168,6 +1274,7 @@ window.KANJI_DATA = [
     reactionTimer = setTimeout(() => {
       mascot.className = 'goth-bunny idle';
       if (scene) scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
+      if (party) party.classList.remove('party-cheer','party-sad');
       if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
     }, type === 'attack' ? 1100 : type === 'celebrate' ? 1200 : 980);
   }
@@ -1291,7 +1398,16 @@ window.KANJI_DATA = [
       picked.push(next);
       pool = pool.filter(x => x.k !== next.k);
     }
-    return picked.map(item => makeQuestion(item, sourceItems, mode));
+    const result = picked.map(item => makeQuestion(item, sourceItems, mode));
+
+    const settings = compoundSettings();
+    const cpool = usableCompounds(settings);
+    if (settings.count > 0 && cpool.length >= 3) {
+      const chosen = shuffle(cpool).slice(0, Math.min(settings.count, cpool.length));
+      const positions = shuffle([...Array(QUIZ_LENGTH).keys()]).slice(0, chosen.length);
+      chosen.forEach((c, n) => { result[positions[n]] = makeCompoundQuestion(c, cpool); });
+    }
+    return result;
   }
 
   function resetSession() {
@@ -1390,6 +1506,18 @@ window.KANJI_DATA = [
       $('questionVisual').classList.remove('hidden');
       $('questionMain').textContent = '';
       $('questionSub').textContent = 'ひとつ えらんでね';
+    } else if (q.type === 'compoundReading') {
+      $('questionKind').textContent = `じゅくご ★${q.difficulty >= 3 ? '★★' : q.difficulty >= 2 ? '★' : ''}`;
+      $('questionLead').textContent = 'この じゅくごは なんて よむ？';
+      $('questionMain').textContent = q.prompt;
+      $('questionMain').classList.add('compound-prompt');
+      $('questionSub').textContent = 'むずかしい もんだい！';
+    } else if (q.type === 'compoundKanji') {
+      $('questionKind').textContent = `じゅくご ★${q.difficulty >= 3 ? '★★' : q.difficulty >= 2 ? '★' : ''}`;
+      $('questionLead').textContent = 'この よみかたの じゅくごは どれ？';
+      $('questionMain').textContent = q.prompt;
+      $('questionMain').classList.add('reading-prompt','compound-reading-prompt');
+      $('questionSub').textContent = 'むずかしい もんだい！';
     } else {
       $('questionKind').textContent = 'はんたいことば';
       $('questionLead').textContent = 'はんたいの いみの かんじは どれ？';
@@ -1420,7 +1548,7 @@ window.KANJI_DATA = [
 
     const q = quiz[quizIndex];
     const correct = option === q.answer;
-    const stat = getStat(q.item.k);
+    const statKeys = q.statKeys?.length ? q.statKeys : [q.item.k];
     state.totalAnswered += 1;
 
     const buttons = [...$('answers').querySelectorAll('.answer-btn')];
@@ -1431,7 +1559,7 @@ window.KANJI_DATA = [
     });
 
     if (correct) {
-      stat.c += 1;
+      statKeys.forEach(k => { getStat(k).c += 1; });
       state.totalCorrect += 1;
       state.stars += 1;
       sessionCorrect += 1;
@@ -1469,7 +1597,7 @@ window.KANJI_DATA = [
         }
       }
     } else {
-      stat.w += 1;
+      statKeys.forEach(k => { getStat(k).w += 1; });
       sessionCombo = 0;
       clickedBtn.classList.remove('dim');
       clickedBtn.classList.add('wrong');
@@ -1477,6 +1605,8 @@ window.KANJI_DATA = [
         reading:`おしい！ 「${q.item.k}」は「${q.item.r}」だよ`,
         kanji:`おしい！ 「${q.item.r}」は「${q.item.k}」だよ`,
         picture:`おしい！ この えは「${q.item.k}」だよ`,
+        compoundReading:`おしい！ 「${q.prompt}」は「${q.answer}」と よむよ`,
+        compoundKanji:`おしい！ 「${q.prompt}」は「${q.answer}」だよ`,
         opposite:`おしい！ 「${q.item.k}」の はんたいは「${q.answer}」だよ`
       };
       $('feedback').textContent = explanations[q.type] || 'おしい！';
@@ -1760,6 +1890,6 @@ window.KANJI_DATA = [
   updateHome();
 })();
 
-  </script>
+</script>
 </body>
 </html>
