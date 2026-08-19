@@ -394,7 +394,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </button>
       </div>
 
-      <footer>Kanji Quest V02 · v0.2.0</footer>
+      <footer>Kanji Quest V02.1 · v0.2.1</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -527,6 +527,8 @@ window.KANJI_DATA = [
   const DATA = window.KANJI_DATA || [];
   const STORAGE_KEY = 'kanjiQuestV01'; // V01.3の記録をそのまま引き継ぐ
   const QUIZ_LENGTH = 10;
+  const BOSS_MAX_HP = 100;
+  const BOSS_DAMAGE = 10;
 
   const STAGES = [
     { id:'s1', label:'1-1', title:'かずのどうくつ', icon:'1', kanji:'一二三四五六七八九十' },
@@ -541,10 +543,12 @@ window.KANJI_DATA = [
     { id:'b2', label:'BOSS', title:'かんじドラゴン', icon:'🐲', boss:true, pool:'一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六' }
   ];
 
+  // 絵だけで意味を取り違えにくい漢字に限定する。
+  // 林・森は木の本数で区別し、川・空など曖昧になりやすい絵は出題しない。
   const PICTURES = {
-    '山':'🏔️','川':'🌊','木':'🌳','林':'🌲','森':'🌲','花':'🌸','草':'🌿','竹':'🎋','石':'🪨','雨':'🌧️',
-    '日':'☀️','月':'🌙','火':'🔥','水':'💧','空':'☁️','犬':'🐶','虫':'🐛','貝':'🐚','車':'🚗','糸':'🧵',
-    '目':'👁️','耳':'👂','手':'✋','足':'🦶','口':'👄','金':'🪙','王':'👑','音':'🎵','本':'📖','学校':'🏫'
+    '山':'🏔️','木':'🌳','林':'🌳🌳','森':'🌳🌳🌳','花':'🌸','草':'🌱','竹':'🎋','石':'🪨','雨':'🌧️',
+    '日':'☀️','月':'🌙','火':'🔥','水':'💧','犬':'🐶','虫':'🐛','貝':'🐚','車':'🚗','糸':'🧵',
+    '目':'👁️','耳':'👂','手':'✋','足':'🦶','口':'👄','金':'🪙','王':'👑','音':'🎵','本':'📖'
   };
 
   const OPPOSITES = {
@@ -579,7 +583,7 @@ window.KANJI_DATA = [
   let sessionCombo = 0;
   let maxCombo = 0;
   let answered = false;
-  let bossHp = 6;
+  let bossHp = BOSS_MAX_HP;
   let starsAtStart = state.stars;
   let currentContext = { type:'free' };
   let lastContext = { type:'free' };
@@ -618,6 +622,20 @@ window.KANJI_DATA = [
       [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
+  }
+
+  // 画面に同じ選択肢が2つ出ないことを保証する。
+  function makeUniqueOptions(answer, candidates, count = 3) {
+    const unique = [];
+    const seen = new Set([String(answer)]);
+    for (const value of shuffle(candidates)) {
+      const label = String(value);
+      if (seen.has(label)) continue;
+      seen.add(label);
+      unique.push(value);
+      if (unique.length >= count - 1) break;
+    }
+    return shuffle([answer, ...unique]);
   }
 
   function getItem(k) {
@@ -729,25 +747,25 @@ window.KANJI_DATA = [
     if (type === 'reading') {
       const pool = DATA.filter(x => x.k !== item.k && x.r !== item.r);
       const distractors = shuffle(pool).slice(0,2);
-      return { item, type, prompt:item.k, answer:item.r, options:shuffle([item.r, ...distractors.map(x => x.r)]) };
+      return { item, type, prompt:item.k, answer:item.r, options:makeUniqueOptions(item.r, pool.map(x => x.r)) };
     }
 
     if (type === 'kanji') {
       const pool = DATA.filter(x => x.k !== item.k && x.r !== item.r);
       const distractors = shuffle(pool).slice(0,2);
-      return { item, type, prompt:item.r, answer:item.k, options:shuffle([item.k, ...distractors.map(x => x.k)]) };
+      return { item, type, prompt:item.r, answer:item.k, options:makeUniqueOptions(item.k, pool.map(x => x.k)) };
     }
 
     if (type === 'picture') {
       const pictureItems = DATA.filter(x => x.k !== item.k && PICTURES[x.k]);
       const distractors = shuffle(pictureItems).slice(0,2);
-      return { item, type, prompt:PICTURES[item.k], answer:item.k, options:shuffle([item.k, ...distractors.map(x => x.k)]) };
+      return { item, type, prompt:PICTURES[item.k], answer:item.k, options:makeUniqueOptions(item.k, pictureItems.map(x => x.k)) };
     }
 
     const opposite = OPPOSITES[item.k];
     const pool = DATA.filter(x => x.k !== item.k && x.k !== opposite);
     const distractors = shuffle(pool).slice(0,2);
-    return { item, type:'opposite', prompt:item.k, answer:opposite, options:shuffle([opposite, ...distractors.map(x => x.k)]) };
+    return { item, type:'opposite', prompt:item.k, answer:opposite, options:makeUniqueOptions(opposite, pool.map(x => x.k)) };
   }
 
   function buildQuiz(sourceItems, mode = selectedMode) {
@@ -771,7 +789,7 @@ window.KANJI_DATA = [
     sessionCombo = 0;
     maxCombo = 0;
     answered = false;
-    bossHp = 6;
+    bossHp = BOSS_MAX_HP;
     starsAtStart = state.stars;
     $('sessionStars').textContent = '0';
     $('comboCount').textContent = '0';
@@ -915,9 +933,9 @@ window.KANJI_DATA = [
       if (currentContext.type === 'stage') {
         const stage = STAGES[currentContext.stageIndex];
         if (stage.boss) {
-          bossHp = Math.max(0, bossHp - 1);
+          bossHp = Math.max(0, bossHp - BOSS_DAMAGE);
           $('bossHp').textContent = bossHp;
-          $('bossBar').style.width = `${(bossHp / 6) * 100}%`;
+          $('bossBar').style.width = `${(bossHp / BOSS_MAX_HP) * 100}%`;
         }
       }
     } else {
