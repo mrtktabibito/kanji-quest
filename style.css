@@ -611,3 +611,63 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 }
 
 .result-bunny.sad ~ .result-sparkle { display:none; }
+
+
+/* V05.1 character visibility / party layout */
+.companion-stage {
+  margin-top:12px;
+  min-height:92px;
+  padding:10px 12px 12px;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.84),rgba(249,241,252,.9));
+  border:1px solid rgba(133,82,165,.09);
+  box-shadow:0 8px 24px rgba(73,39,87,.07);
+}
+.companion-stage:empty { display:none; }
+.companion-stage-title { text-align:center; color:#80668a; font-size:9px; font-weight:900; margin-bottom:5px; }
+.companion-stage-row { display:flex; justify-content:center; align-items:flex-end; gap:10px; }
+.companion-stage-card { width:66px; min-width:0; text-align:center; }
+.companion-stage-card > span {
+  width:46px; height:46px; margin:0 auto; display:grid; place-items:center;
+  border-radius:17px; background:#fff; border:2px solid #eadcf2;
+  box-shadow:0 6px 16px rgba(73,39,87,.11); font-size:29px;
+}
+.companion-stage-card small {
+  display:block; margin-top:4px; color:#7b6982; font-size:7px; line-height:1.15; font-weight:900;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.companion-stage.party-cheer .companion-stage-card > span { animation:companionBigCheer .55s ease 2; }
+.companion-stage.party-sad .companion-stage-card > span { animation:companionBigSad .62s ease 1; }
+@keyframes companionBigCheer { 35%{transform:translateY(-9px) rotate(-7deg) scale(1.14)} 68%{transform:translateY(-3px) rotate(7deg) scale(1.06)} }
+@keyframes companionBigSad { 30%{transform:translateY(3px) rotate(-6deg)} 62%{transform:translateY(3px) rotate(6deg)} }
+.quiz-mascot-anchor.at-goal .goth-bunny { animation:bunnyVictory .7s ease-in-out 2; }
+
+@media (max-width:430px) {
+  .quest-scene { min-height:88px; padding:6px 9px 5px; }
+  .journey-lane { height:60px; }
+  .journey-track { top:35px; left:18px; right:29px; height:6px; }
+  .journey-goal { top:14px; right:1px; font-size:24px; }
+  .quiz-mascot-anchor { width:58px; height:64px; top:0; transform:translateX(-17px); }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.78; transform-origin:50% 0; }
+  .companion-chip { width:27px; height:27px; font-size:17px; border-width:1.5px; }
+  .quest-meta-right { gap:5px; }
+  .companion-party { gap:3px; }
+  .reaction-text { max-width:105px; font-size:7.5px; }
+  .companion-stage { margin-top:10px; min-height:88px; padding:8px 8px 10px; }
+  .companion-stage-row { gap:6px; }
+  .companion-stage-card { width:62px; }
+  .companion-stage-card > span { width:44px; height:44px; border-radius:16px; font-size:27px; }
+  .companion-stage-card small { font-size:6.5px; }
+}
+
+@media (max-width:430px) and (max-height:700px) {
+  .quest-scene { min-height:76px; }
+  .journey-lane { height:49px; }
+  .journey-track { top:29px; }
+  .journey-goal { top:8px; font-size:22px; }
+  .quiz-mascot-anchor .goth-bunny { --bun-scale:.69; }
+  .companion-stage { min-height:72px; padding:6px 7px 7px; }
+  .companion-stage-title { margin-bottom:3px; }
+  .companion-stage-card > span { width:36px; height:36px; font-size:22px; }
+  .companion-stage-card small { display:none; }
+}

@@ -211,11 +211,14 @@
     const unlocked = getUnlockedCollections();
     const visible = unlocked.filter(c => c.id !== 'egg');
     const party = visible.length ? visible.slice(-4) : unlocked.filter(c => c.id === 'egg');
-    const html = party.map(c => `<span class="companion-chip" title="${c.name}">${c.icon}</span>`).join('');
+    const chipHtml = party.map(c => `<span class="companion-chip" title="${c.name}">${c.icon}</span>`).join('');
+    const stageHtml = party.map(c => `<div class="companion-stage-card" title="${c.name}"><span>${c.icon}</span><small>${c.name}</small></div>`).join('');
     const q = $('companionParty');
-    if (q) q.innerHTML = html ? `<b>なかま</b>${html}` : '';
+    if (q) q.innerHTML = chipHtml ? `<b>なかま</b>${chipHtml}` : '';
+    const s = $('companionStage');
+    if (s) s.innerHTML = stageHtml ? `<div class="companion-stage-title">いっしょに ぼうけん！</div><div class="companion-stage-row">${stageHtml}</div>` : '';
     const r = $('resultCompanions');
-    if (r) r.innerHTML = html ? `<span>いっしょに ぼうけん</span>${html}` : '';
+    if (r) r.innerHTML = chipHtml ? `<span>いっしょに ぼうけん</span>${chipHtml}` : '';
   }
 
   function knownCharsForStage(stageIndex) {
@@ -384,12 +387,14 @@
     const mascot = $('quizMascot');
     const scene = $('questScene');
     const party = $('companionParty');
+    const partyStage = $('companionStage');
     if (!mascot) return;
     clearTimeout(reactionTimer);
-    if (party) {
-      party.classList.remove('party-cheer','party-sad');
-      party.classList.add(type === 'sad' ? 'party-sad' : 'party-cheer');
-    }
+    [party, partyStage].forEach(el => {
+      if (!el) return;
+      el.classList.remove('party-cheer','party-sad');
+      el.classList.add(type === 'sad' ? 'party-sad' : 'party-cheer');
+    });
     mascot.className = `goth-bunny ${type}`;
     if (scene) {
       scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
@@ -407,7 +412,7 @@
     reactionTimer = setTimeout(() => {
       mascot.className = 'goth-bunny idle';
       if (scene) scene.classList.remove('fx-happy','fx-celebrate','fx-attack','fx-sad');
-      if (party) party.classList.remove('party-cheer','party-sad');
+      [party, partyStage].forEach(el => el?.classList.remove('party-cheer','party-sad'));
       if ($('reactionText')) $('reactionText').textContent = 'いっしょに がんばろう！';
     }, type === 'attack' ? 1100 : type === 'celebrate' ? 1200 : 980);
   }
@@ -469,12 +474,17 @@
     const anchor = $('quizMascotAnchor');
     const fill = $('journeyFill');
     if (!anchor || !fill) return;
+    // 主人公はゴール旗の少し手前で止め、10問目でも画面外へはみ出さない。
+    const mobile = window.matchMedia('(max-width: 430px)').matches;
+    const maxAnchor = mobile ? 88 : 92;
+    const anchorPct = Math.min(maxAnchor, pct * (maxAnchor / 100));
     if (!animate) {
       anchor.style.transition = 'none';
       fill.style.transition = 'none';
     }
-    anchor.style.left = `${pct}%`;
+    anchor.style.left = `${anchorPct}%`;
     fill.style.width = `${pct}%`;
+    anchor.classList.toggle('at-goal', pct >= 100);
     if (!animate) requestAnimationFrame(() => {
       anchor.style.transition = '';
       fill.style.transition = '';
