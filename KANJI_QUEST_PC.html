@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="かんじクエスト" />
   <title>かんじクエスト</title>
 
-  <style>
+<style>
 :root {
   --bg: #f7f2fa;
   --panel: #ffffff;
@@ -704,6 +704,10 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
 .companion-stage.party-count-2 .companion-art-frame { width:80px; height:86px; }
 .companion-stage.party-count-3 .companion-art-frame { width:72px; height:78px; }
 .companion-stage.party-count-4 .companion-art-frame { width:64px; height:70px; }
+.companion-stage.party-count-5 .companion-stage-card { width:58px; flex-basis:58px; }
+.companion-stage.party-count-5 .companion-art-frame { width:54px; height:60px; }
+.companion-stage.party-count-6 .companion-stage-card { width:50px; flex-basis:50px; }
+.companion-stage.party-count-6 .companion-art-frame { width:48px; height:54px; }
 .companion-stage.party-cheer .companion-art-frame { animation:companionArtCheer .52s cubic-bezier(.2,.9,.25,1) 2; }
 .companion-stage.party-sad .companion-art-frame { animation:companionArtSad .68s ease 1; filter:saturate(.72); }
 .companion-party.party-cheer .companion-chip.art { animation:companionArtCheer .45s ease 2; }
@@ -731,6 +735,14 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .companion-stage.party-count-2 .companion-art-frame { width:82px; height:88px; }
   .companion-stage.party-count-3 .companion-art-frame { width:72px; height:78px; }
   .companion-stage.party-count-4 .companion-art-frame { width:64px; height:70px; }
+  .companion-stage.party-count-5 .companion-stage-card { width:56px; flex-basis:56px; }
+  .companion-stage.party-count-5 .companion-art-frame { width:52px; height:58px; }
+  .companion-stage.party-count-6 .companion-stage-card { width:48px; flex-basis:48px; }
+  .companion-stage.party-count-6 .companion-art-frame { width:46px; height:52px; }
+.companion-stage.party-count-5 .companion-stage-card { width:58px; flex-basis:58px; }
+.companion-stage.party-count-5 .companion-art-frame { width:54px; height:60px; }
+.companion-stage.party-count-6 .companion-stage-card { width:50px; flex-basis:50px; }
+.companion-stage.party-count-6 .companion-art-frame { width:48px; height:54px; }
 }
 @media (max-width:430px) and (max-height:740px) {
   .companion-stage { min-height:104px; padding-top:5px; }
@@ -739,6 +751,8 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .companion-stage.party-count-2 .companion-art-frame { width:70px; height:76px; }
   .companion-stage.party-count-3 .companion-art-frame { width:62px; height:68px; }
   .companion-stage.party-count-4 .companion-art-frame { width:56px; height:62px; }
+  .companion-stage.party-count-5 .companion-art-frame { width:48px; height:54px; }
+  .companion-stage.party-count-6 .companion-art-frame { width:42px; height:48px; }
   .companion-stage-card small { display:none; }
 }
 
@@ -818,7 +832,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .boss-hit-burst { font-size:14px; top:18%; }
 }
 
-  </style>
+</style>
 </head>
 <body>
   <main class="app-shell">
@@ -885,7 +899,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </button>
       </div>
 
-      <footer>Kanji Quest V06.2 · v0.6.2</footer>
+      <footer>Kanji Quest V06.3 · v0.6.3</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -1045,7 +1059,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
     </div>
   </main>
 
-  <script>
+<script>
 window.KANJI_DATA = [
   {k:'一', r:'いち'}, {k:'右', r:'みぎ'}, {k:'雨', r:'あめ'}, {k:'円', r:'えん'}, {k:'王', r:'おう'},
   {k:'音', r:'おと'}, {k:'下', r:'した'}, {k:'火', r:'ひ'}, {k:'花', r:'はな'}, {k:'貝', r:'かい'},
@@ -1065,8 +1079,8 @@ window.KANJI_DATA = [
   {k:'目', r:'め'}, {k:'立', r:'たつ'}, {k:'力', r:'ちから'}, {k:'林', r:'はやし'}, {k:'六', r:'ろく'}
 ];
 
-  </script>
-  <script>
+</script>
+<script>
 (() => {
   'use strict';
 
@@ -1138,12 +1152,12 @@ window.KANJI_DATA = [
   ];
 
   const COLLECTIONS = [
-    { id:'egg', need:0, icon:'✦', name:'まほうのたまご', desc:'ぼうけんの はじまり' },
-    { id:'cat', need:15, icon:'✦', name:'むらさきねこ', desc:'⭐15こで なかま' },
-    { id:'owl', need:35, icon:'✦', name:'ものしりふくろう', desc:'⭐35こで なかま' },
-    { id:'unicorn', need:65, icon:'✦', name:'ほしのユニコーン', desc:'⭐65こで なかま' },
-    { id:'wizard', need:100, icon:'✦', name:'かんじのまどうし', desc:'⭐100こで なかま' },
-    { id:'dragon', need:150, icon:'✦', name:'ドラゴンのともだち', desc:'⭐150こで なかま' }
+    { id:'egg', clearNeed:1, unlockStage:'1-1', icon:'✦', name:'まほうのたまご', desc:'1-1クリアで なかま' },
+    { id:'cat', clearNeed:2, unlockStage:'1-2', icon:'✦', name:'むらさきねこ', desc:'1-2クリアで なかま' },
+    { id:'owl', clearNeed:3, unlockStage:'1-3', icon:'✦', name:'ものしりふくろう', desc:'1-3クリアで なかま' },
+    { id:'unicorn', clearNeed:4, unlockStage:'1-4', icon:'✦', name:'ほしのユニコーン', desc:'1-4クリアで なかま' },
+    { id:'wizard', clearNeed:5, unlockStage:'BOSS 1', icon:'✦', name:'かんじのまどうし', desc:'BOSS 1クリアで なかま' },
+    { id:'dragon', clearNeed:6, unlockStage:'2-1', icon:'✦', name:'ドラゴンのともだち', desc:'2-1クリアで なかま' }
   ];
 
 
@@ -1253,7 +1267,7 @@ window.KANJI_DATA = [
   let maxCombo = 0;
   let answered = false;
   let bossHp = BOSS_MAX_HP;
-  let starsAtStart = state.stars;
+  let companionCountAtStart = 0;
   let currentContext = { type:'free' };
   let lastContext = { type:'free' };
   let reactionTimer = null;
@@ -1359,14 +1373,23 @@ window.KANJI_DATA = [
     return STAGES.length - 1;
   }
 
-  function getUnlockedCollections(stars = state.stars) {
-    return COLLECTIONS.filter(c => stars >= c.need);
+  function getClearedStageCount() {
+    let count = 0;
+    for (const stage of STAGES) {
+      if ((state.stageScores[stage.id]?.rating || 0) >= 1) count += 1;
+      else break;
+    }
+    return count;
+  }
+
+  function getUnlockedCollections() {
+    const cleared = getClearedStageCount();
+    return COLLECTIONS.filter(c => cleared >= c.clearNeed);
   }
 
   function renderCompanions() {
     const unlocked = getUnlockedCollections();
-    const visible = unlocked.filter(c => c.id !== 'egg');
-    const party = visible.length ? visible.slice(-4) : unlocked.filter(c => c.id === 'egg');
+    const party = unlocked.slice(0, 6);
     const chipHtml = party.map(c => `<span class="companion-chip art" title="${c.name}">${companionArt(c.id)}</span>`).join('');
     const stageHtml = party.map(c => `<div class="companion-stage-card art-${c.id}" title="${c.name}"><span class="companion-art-frame">${companionArt(c.id)}</span><small>${c.name}</small></div>`).join('');
     const q = $('companionParty');
@@ -1720,7 +1743,7 @@ window.KANJI_DATA = [
     maxCombo = 0;
     answered = false;
     bossHp = BOSS_MAX_HP;
-    starsAtStart = state.stars;
+    companionCountAtStart = getUnlockedCollections().length;
     $('sessionStars').textContent = '0';
     $('comboCount').textContent = '0';
     $('comboBanner').classList.add('hidden');
@@ -1990,7 +2013,7 @@ window.KANJI_DATA = [
       $('resultMessage').textContent = sessionCorrect >= 9 ? 'すごい！ かんじはかせ！' : sessionCorrect >= 7 ? 'とっても よくできました！' : sessionCorrect >= 5 ? 'いいちょうし！ もういっかい やってみよう' : 'だいじょうぶ。すこしずつ おぼえよう！';
     }
 
-    const newly = COLLECTIONS.filter(c => starsAtStart < c.need && state.stars >= c.need);
+    const newly = getUnlockedCollections().slice(companionCountAtStart);
     const unlockBox = $('unlockBox');
     if (newly.length) {
       unlockBox.innerHTML = `<strong>🎁 あたらしい なかま！</strong><span>${newly.map(c => c.name).join('・')}</span>`;
@@ -2031,12 +2054,13 @@ window.KANJI_DATA = [
 
   function renderCollection() {
     const grid = $('collectionGrid');
+    const unlockedIds = new Set(getUnlockedCollections().map(c => c.id));
     grid.innerHTML = COLLECTIONS.map(c => {
-      const unlocked = state.stars >= c.need;
+      const unlocked = unlockedIds.has(c.id);
       return `<article class="collection-card${unlocked ? '' : ' locked'}">
         <div class="collection-icon art">${unlocked ? companionArt(c.id) : '<span class="locked-silhouette">?</span>'}</div>
         <strong>${unlocked ? c.name : '？？？'}</strong>
-        <small>${unlocked ? c.desc : `<span class="need">あと ⭐${Math.max(0, c.need - state.stars)}</span>`}</small>
+        <small>${unlocked ? c.desc : `<span class="need">${c.unlockStage}を クリアで なかま</span>`}</small>
       </article>`;
     }).join('');
   }
@@ -2197,6 +2221,6 @@ window.KANJI_DATA = [
   updateHome();
 })();
 
-  </script>
+</script>
 </body>
 </html>
