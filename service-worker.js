@@ -1,6 +1,6 @@
-const CACHE = 'kanji-quest-v07-1-0.7.1';
+const CACHE = 'kanji-quest-v07-2-0.7.2';
 const ASSETS = [
-  './', './index.html', './style_v071.css', './app_v071.js', './questions_v071.js', './manifest.json',
+  './', './index.html', './style_v072.css', './app_v072.js', './questions_v072.js', './manifest.json',
   './assets/iroha-card.png', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'
 ];
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS))); self.skipWaiting(); });
