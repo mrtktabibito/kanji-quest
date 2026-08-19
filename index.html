@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
   <link rel="icon" href="icons/icon-192.png" />
-  <link rel="stylesheet" href="style_v061.css" />
+  <link rel="stylesheet" href="style_v062.css" />
   <title>かんじクエスト</title>
 </head>
 <body>
@@ -78,7 +78,7 @@
         </button>
       </div>
 
-      <footer>Kanji Quest V06.1 · v0.6.1</footer>
+      <footer>Kanji Quest V06.2 · v0.6.2</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -137,12 +137,18 @@
         </div>
       </section>
 
-      <section id="bossPanel" class="boss-panel hidden" aria-label="ボスのHP">
-        <div class="boss-head-row">
-          <div class="boss-identity"><span id="bossAvatar" class="boss-avatar">👾</span><strong id="bossName">もじモンスター</strong></div>
-          <span>HP <b id="bossHp">100</b></span>
+      <section id="bossPanel" class="boss-panel boss-arena-panel hidden" aria-label="ボスのHP">
+        <div class="boss-arena-row">
+          <div id="bossAvatar" class="boss-avatar boss-avatar-large" aria-hidden="true"><div class="boss-art boss-monster-art"><span class="boss-monster-face">👾</span></div></div>
+          <div class="boss-info">
+            <div class="boss-head-row">
+              <strong id="bossName">もじモンスター</strong>
+              <span class="boss-hp-label">HP <b id="bossHp">100</b></span>
+            </div>
+            <div class="boss-track"><div id="bossBar" class="boss-bar"></div></div>
+            <small class="boss-hint">せいかいで 10ダメージ！</small>
+          </div>
         </div>
-        <div class="boss-track"><div id="bossBar" class="boss-bar"></div></div>
       </section>
 
       <div class="question-card">
@@ -232,7 +238,7 @@
     </div>
   </main>
 
-  <script src="questions_v061.js"></script>
-  <script src="app_v061.js"></script>
+  <script src="questions_v062.js"></script>
+  <script src="app_v062.js"></script>
 </body>
 </html>

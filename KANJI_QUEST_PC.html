@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="かんじクエスト" />
   <title>かんじクエスト</title>
 
-<style>
+  <style>
 :root {
   --bg: #f7f2fa;
   --panel: #ffffff;
@@ -742,7 +742,83 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .companion-stage-card small { display:none; }
 }
 
-</style>
+
+/* V06.2 companion reaction fix + large boss arena */
+.companion-stage.party-cheer { box-shadow:0 0 0 3px rgba(232,120,182,.08),0 10px 30px rgba(133,82,165,.10); }
+.companion-stage.party-sad { box-shadow:0 0 0 3px rgba(103,189,233,.08),0 10px 30px rgba(73,39,87,.08); }
+.companion-stage.party-cheer .companion-stage-card { animation:partyCardLift .68s cubic-bezier(.2,.9,.25,1) 2; }
+.companion-stage.party-sad .companion-stage-card { animation:partyCardWorry .72s ease 1; }
+.companion-stage.party-cheer .companion-stage-card:nth-child(2) { animation-delay:.06s; }
+.companion-stage.party-cheer .companion-stage-card:nth-child(3) { animation-delay:.12s; }
+.companion-stage.party-cheer .companion-stage-card:nth-child(4) { animation-delay:.18s; }
+.companion-stage.party-cheer .companion-svg { filter:drop-shadow(0 0 8px rgba(232,120,182,.42)); }
+.companion-stage.party-sad .companion-svg { filter:saturate(.68) brightness(.96); }
+@keyframes partyCardLift { 0%,100%{transform:none} 30%{transform:translateY(-12px) rotate(-5deg) scale(1.06)} 62%{transform:translateY(-4px) rotate(6deg) scale(1.03)} }
+@keyframes partyCardWorry { 0%,100%{transform:none} 25%{transform:translateY(3px) rotate(-5deg)} 55%{transform:translateY(3px) rotate(5deg)} 78%{transform:translateY(2px) rotate(-3deg)} }
+
+.boss-arena-panel {
+  padding:10px 12px;
+  min-height:100px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#372441,#563361 58%,#70407a);
+  overflow:hidden;
+}
+.boss-arena-row { display:grid; grid-template-columns:92px 1fr; gap:12px; align-items:center; }
+.boss-avatar-large {
+  width:88px; height:82px; border-radius:24px; display:grid; place-items:center;
+  background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.17),rgba(255,255,255,.04) 58%,transparent 70%);
+  border:1px solid rgba(255,255,255,.14); position:relative; transform-origin:50% 70%;
+}
+.boss-art { width:78px; height:78px; display:grid; place-items:center; position:relative; }
+.boss-art .companion-svg { width:78px; height:78px; filter:drop-shadow(0 6px 7px rgba(0,0,0,.24)); }
+.boss-monster-face { font-size:56px; line-height:1; filter:drop-shadow(0 6px 6px rgba(0,0,0,.24)); }
+.boss-horn { position:absolute; top:8px; width:9px; height:20px; background:#f3a6ca; border:2px solid #25182c; border-radius:60% 60% 20% 20%; }
+.boss-horn.h1 { left:13px; transform:rotate(-24deg); } .boss-horn.h2 { right:13px; transform:rotate(24deg); }
+.boss-info { min-width:0; }
+.boss-info .boss-head-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.boss-info .boss-head-row strong { font-size:15px; color:#fff; }
+.boss-hp-label { font-size:12px; white-space:nowrap; color:#fff; }
+.boss-hp-label b { font-size:16px; }
+.boss-info .boss-track { margin-top:9px; height:11px; background:rgba(255,255,255,.18); }
+.boss-info .boss-bar { background:linear-gradient(90deg,#ff7fb6,#ffc5dd); box-shadow:0 0 10px rgba(255,127,182,.28); }
+.boss-hint { display:block; margin-top:5px; color:rgba(255,255,255,.72); font-size:8px; font-weight:800; }
+.boss-panel.boss-hit::before {
+  content:""; position:absolute; inset:0; z-index:20; pointer-events:none;
+  background:radial-gradient(circle at 28% 48%,rgba(255,255,255,.90),rgba(255,102,157,.48) 18%,transparent 48%);
+  animation:bossDamageFlash .55s ease forwards;
+}
+.boss-avatar-hit { animation:bossCreatureDamage .72s cubic-bezier(.2,.9,.25,1) !important; }
+.boss-avatar-hit .boss-art { animation:bossCreatureBlink .16s linear 4 alternate; }
+.boss-avatar-ko { animation:bossCreatureKO 1.25s cubic-bezier(.15,.85,.25,1) forwards !important; }
+.boss-hit-burst { right:8px; top:22%; font-size:17px; }
+.boss-ko { font-size:34px; letter-spacing:.08em; }
+@keyframes bossDamageFlash { 0%{opacity:0} 18%{opacity:1} 100%{opacity:0} }
+@keyframes bossCreatureDamage {
+  0%{transform:none} 16%{transform:translateX(13px) rotate(14deg) scale(.90)} 32%{transform:translateX(-10px) rotate(-10deg) scale(1.04)}
+  48%{transform:translateX(8px) rotate(8deg)} 66%{transform:translateX(-5px) rotate(-5deg)} 100%{transform:none}
+}
+@keyframes bossCreatureBlink { from{filter:brightness(1) saturate(1)} to{filter:brightness(2.2) saturate(.4)} }
+@keyframes bossCreatureKO {
+  0%{transform:none;opacity:1} 22%{transform:translateY(-15px) rotate(-16deg) scale(1.12);filter:brightness(1.8)}
+  48%{transform:translateX(18px) translateY(-5px) rotate(32deg) scale(.95)}
+  72%{transform:translateX(45px) translateY(22px) rotate(75deg) scale(.62);opacity:.72}
+  100%{transform:translateX(90px) translateY(58px) rotate(145deg) scale(.20);opacity:0}
+}
+
+@media (max-width:430px) {
+  .boss-arena-panel { min-height:92px; padding:8px 10px; margin-bottom:7px; }
+  .boss-arena-row { grid-template-columns:78px 1fr; gap:9px; }
+  .boss-avatar-large { width:76px; height:72px; border-radius:20px; }
+  .boss-art,.boss-art .companion-svg { width:68px; height:68px; }
+  .boss-monster-face { font-size:50px; }
+  .boss-info .boss-head-row strong { font-size:13px; }
+  .boss-hp-label { font-size:10px; } .boss-hp-label b { font-size:14px; }
+  .boss-info .boss-track { height:9px; margin-top:7px; }
+  .boss-hint { font-size:7px; margin-top:4px; }
+  .boss-hit-burst { font-size:14px; top:18%; }
+}
+
+  </style>
 </head>
 <body>
   <main class="app-shell">
@@ -809,7 +885,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </button>
       </div>
 
-      <footer>Kanji Quest V06.1 · v0.6.1</footer>
+      <footer>Kanji Quest V06.2 · v0.6.2</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -868,12 +944,18 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </div>
       </section>
 
-      <section id="bossPanel" class="boss-panel hidden" aria-label="ボスのHP">
-        <div class="boss-head-row">
-          <div class="boss-identity"><span id="bossAvatar" class="boss-avatar">👾</span><strong id="bossName">もじモンスター</strong></div>
-          <span>HP <b id="bossHp">100</b></span>
+      <section id="bossPanel" class="boss-panel boss-arena-panel hidden" aria-label="ボスのHP">
+        <div class="boss-arena-row">
+          <div id="bossAvatar" class="boss-avatar boss-avatar-large" aria-hidden="true"><div class="boss-art boss-monster-art"><span class="boss-monster-face">👾</span></div></div>
+          <div class="boss-info">
+            <div class="boss-head-row">
+              <strong id="bossName">もじモンスター</strong>
+              <span class="boss-hp-label">HP <b id="bossHp">100</b></span>
+            </div>
+            <div class="boss-track"><div id="bossBar" class="boss-bar"></div></div>
+            <small class="boss-hint">せいかいで 10ダメージ！</small>
+          </div>
         </div>
-        <div class="boss-track"><div id="bossBar" class="boss-bar"></div></div>
       </section>
 
       <div class="question-card">
@@ -963,7 +1045,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
     </div>
   </main>
 
-<script>
+  <script>
 window.KANJI_DATA = [
   {k:'一', r:'いち'}, {k:'右', r:'みぎ'}, {k:'雨', r:'あめ'}, {k:'円', r:'えん'}, {k:'王', r:'おう'},
   {k:'音', r:'おと'}, {k:'下', r:'した'}, {k:'火', r:'ひ'}, {k:'花', r:'はな'}, {k:'貝', r:'かい'},
@@ -983,8 +1065,8 @@ window.KANJI_DATA = [
   {k:'目', r:'め'}, {k:'立', r:'たつ'}, {k:'力', r:'ちから'}, {k:'林', r:'はやし'}, {k:'六', r:'ろく'}
 ];
 
-</script>
-<script>
+  </script>
+  <script>
 (() => {
   'use strict';
 
@@ -1142,6 +1224,13 @@ window.KANJI_DATA = [
 
   function companionArt(id) {
     return COMPANION_ART[id] || COMPANION_ART.egg;
+  }
+
+  function bossArt(stage) {
+    if (stage?.id === 'b2') {
+      return `<div class="boss-art boss-dragon-art">${companionArt('dragon')}</div>`;
+    }
+    return `<div class="boss-art boss-monster-art"><span class="boss-monster-face">👾</span><i class="boss-horn h1"></i><i class="boss-horn h2"></i></div>`;
   }
 
   const defaultState = () => ({
@@ -1529,14 +1618,14 @@ window.KANJI_DATA = [
     avatar?.classList.add(defeated ? 'boss-avatar-ko' : 'boss-avatar-hit');
     const burst = document.createElement('div');
     burst.className = defeated ? 'boss-ko' : 'boss-hit-burst';
-    burst.textContent = defeated ? 'KO! ★' : `💥 -${BOSS_DAMAGE}`;
+    burst.textContent = defeated ? 'KO! ★' : `💥 ${BOSS_DAMAGE}ダメージ！`;
     panel.appendChild(burst);
-    spawnFx(panel, defeated ? 'ko' : 'boss', defeated ? 22 : 12);
+    spawnFx(panel, defeated ? 'ko' : 'boss', defeated ? 28 : 18);
     setTimeout(() => {
       panel.classList.remove('boss-hit');
       avatar?.classList.remove('boss-avatar-hit');
       if (!defeated) burst.remove();
-    }, 900);
+    }, defeated ? 1250 : 1000);
   }
 
   function updateJourney(animate = true) {
@@ -1675,7 +1764,7 @@ window.KANJI_DATA = [
     quiz = buildQuiz(source, 'mix');
     if (stage.boss) {
       $('bossName').textContent = stage.title;
-      if ($('bossAvatar')) $('bossAvatar').textContent = stage.icon;
+      if ($('bossAvatar')) $('bossAvatar').innerHTML = bossArt(stage);
       $('bossHp').textContent = bossHp;
       $('bossBar').style.width = '100%';
       $('bossPanel').classList.remove('boss-hit','boss-defeated');
@@ -1764,6 +1853,8 @@ window.KANJI_DATA = [
     const correct = option === q.answer;
     const statKeys = q.statKeys?.length ? q.statKeys : [q.item.k];
     state.totalAnswered += 1;
+    let reactionType = '';
+    let reactionMessage = '';
 
     const buttons = [...$('answers').querySelectorAll('.answer-btn')];
     buttons.forEach(btn => {
@@ -1797,9 +1888,9 @@ window.KANJI_DATA = [
       updateJourney(true);
 
       const isBossNow = currentContext.type === 'stage' && STAGES[currentContext.stageIndex]?.boss;
-      if (isBossNow) setMascotReaction('attack', 'こうげき！ ドーン！');
-      else if (sessionCombo > 0 && sessionCombo % 5 === 0) setMascotReaction('celebrate', `${sessionCombo}コンボ！ だいせいこう！`);
-      else setMascotReaction('happy', 'せいかい！ やったー！ ★');
+      if (isBossNow) { reactionType = 'attack'; reactionMessage = 'こうげき！ ドーン！'; }
+      else if (sessionCombo > 0 && sessionCombo % 5 === 0) { reactionType = 'celebrate'; reactionMessage = `${sessionCombo}コンボ！ だいせいこう！`; }
+      else { reactionType = 'happy'; reactionMessage = 'せいかい！ やったー！ ★'; }
 
       if (currentContext.type === 'stage') {
         const stage = STAGES[currentContext.stageIndex];
@@ -1826,13 +1917,15 @@ window.KANJI_DATA = [
       $('feedback').textContent = explanations[q.type] || 'おしい！';
       $('feedback').className = 'feedback bad';
       playTone(false);
-      setMascotReaction('sad', 'おしい！ なみだ… つぎは きっとできる！');
+      reactionType = 'sad';
+      reactionMessage = 'おしい！ なみだ… つぎは きっとできる！';
     }
 
     $('comboCount').textContent = sessionCombo;
     $('sessionStars').textContent = sessionStars;
     saveState();
     updateHome();
+    if (reactionType) requestAnimationFrame(() => setMascotReaction(reactionType, reactionMessage));
     $('nextBtn').textContent = quizIndex === QUIZ_LENGTH - 1 ? 'けっかを みる' : 'つぎへ';
     $('nextBtn').classList.remove('hidden');
   }
@@ -2104,6 +2197,6 @@ window.KANJI_DATA = [
   updateHome();
 })();
 
-</script>
+  </script>
 </body>
 </html>
