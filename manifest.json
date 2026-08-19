@@ -1,8 +1,9 @@
 {
   "name": "かんじクエスト",
   "short_name": "かんじクエスト",
-  "description": "小学1年生向けの漢字3択クイズ",
+  "description": "小学1年生向け。ステージ・コンボ・ボス・コレクションで遊べる漢字クイズ",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f7f2fa",
   "theme_color": "#8552a5",

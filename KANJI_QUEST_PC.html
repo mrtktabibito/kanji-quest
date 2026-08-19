@@ -1,3 +1,526 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#8552a5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="かんじクエスト" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <style>
+:root {
+  --bg: #f7f2fa;
+  --panel: #ffffff;
+  --ink: #2d2433;
+  --muted: #7c7086;
+  --main: #8552a5;
+  --main-dark: #5a2d70;
+  --accent: #f3a6ca;
+  --soft: #f0e7f5;
+  --soft-2: #eadcf2;
+  --danger: #d85c86;
+  --gold: #f4bd45;
+  --shadow: 0 14px 40px rgba(73,39,87,.12);
+  --radius: 22px;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--bg); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 15% -10%, rgba(243,166,202,.22), transparent 26%),
+    radial-gradient(circle at 100% 8%, rgba(133,82,165,.18), transparent 24%),
+    var(--bg);
+  color: var(--ink);
+  font-family: "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button { font: inherit; }
+button:focus-visible { outline: 3px solid rgba(133,82,165,.38); outline-offset: 3px; }
+
+.app-shell {
+  width: min(100%, 720px);
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: max(20px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+}
+
+.view { display: none; animation: fadeIn .18s ease; }
+.view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+.topbar, .quiz-topbar, .page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.brand { display: flex; align-items: center; gap: 11px; }
+.logo {
+  width: 46px; height: 46px; border-radius: 15px;
+  display: grid; place-items: center;
+  background: var(--main); color: #fff;
+  font-size: 26px; font-weight: 900;
+  box-shadow: 0 9px 20px rgba(133,82,165,.28);
+}
+.brand h1, .page-header h2 { margin: 0; font-size: 20px; line-height: 1.1; letter-spacing: .02em; }
+.brand p, .page-header p { margin: 4px 0 0; color: var(--muted); font-size: 12px; font-weight: 700; }
+
+.icon-btn {
+  width: 42px; height: 42px; border: 0; border-radius: 14px;
+  background: var(--panel); color: var(--main-dark); box-shadow: var(--shadow);
+  font-weight: 900; cursor: pointer;
+}
+.icon-btn.off { color: #a49aab; text-decoration: line-through; }
+.icon-btn.ghost { background: var(--soft); box-shadow: none; font-size: 20px; }
+
+.hero-card {
+  background: linear-gradient(135deg, #3f2949, #8552a5 68%, #a765b5);
+  border-radius: 28px;
+  padding: 24px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.hero-card::after {
+  content: "";
+  position: absolute;
+  width: 150px; height: 150px; border-radius: 50%;
+  right: -65px; top: -65px;
+  background: rgba(243,166,202,.18);
+}
+.hero-copy { position: relative; z-index: 1; }
+.hero-copy h2 { margin: 8px 0 10px; font-size: clamp(28px, 7vw, 40px); line-height: 1.08; letter-spacing: .03em; }
+.hero-copy p { margin: 0; font-weight: 700; font-size: 12px; opacity: .92; }
+.eyebrow { font-size: 12px; font-weight: 900; letter-spacing: .08em; opacity: .85; }
+.star-badge {
+  flex: 0 0 auto;
+  min-width: 95px; min-height: 95px; border-radius: 28px;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.28);
+  display: grid; place-items: center;
+  padding: 12px;
+  position: relative; z-index: 1;
+}
+.star-badge span { font-size: 30px; line-height: 1; }
+.star-badge strong { font-size: 27px; line-height: 1; }
+
+.mode-card, .list-card, .continue-card {
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.compact-card { padding-bottom: 12px; }
+.section-title { font-size: 13px; font-weight: 900; color: var(--muted); margin-bottom: 10px; }
+.segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; background: var(--soft); padding: 5px; border-radius: 15px; }
+.mode-btn { border: 0; border-radius: 11px; padding: 10px 6px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 900; cursor: pointer; }
+.mode-btn.active { background: var(--panel); color: var(--main-dark); box-shadow: 0 5px 14px rgba(73,39,87,.09); }
+
+.primary-btn {
+  width: 100%; border: 0; border-radius: 18px; margin-top: 16px; padding: 17px 18px;
+  background: linear-gradient(135deg, var(--main), #9457ad); color: white; font-weight: 900; font-size: 18px; letter-spacing: .03em;
+  box-shadow: 0 10px 25px rgba(133,82,165,.30); cursor: pointer;
+}
+.primary-btn:active { transform: translateY(1px); }
+.primary-btn:disabled { opacity: .45; cursor: not-allowed; }
+.next-btn { margin-top: 12px; }
+.mini-primary {
+  width: 100%; border: 0; border-radius: 13px; margin-top: 9px; padding: 11px;
+  background: var(--soft); color: var(--main-dark); font-size: 12px; font-weight: 900; cursor: pointer;
+}
+
+.continue-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 16px; }
+.continue-card strong { display: block; margin-top: 2px; font-size: 13px; }
+.tiny-label { display: block; color: var(--muted); font-size: 9px; font-weight: 900; }
+.clear-stars { color: var(--gold); font-size: 18px; letter-spacing: .04em; white-space: nowrap; }
+
+.sub-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.secondary-btn {
+  border: 0; border-radius: 18px; padding: 14px; background: var(--panel); color: var(--ink); box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 10px; text-align: left; cursor: pointer;
+}
+.secondary-btn strong { display: block; font-size: 12px; }
+.secondary-btn small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+.action-icon { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: var(--soft); color: var(--main-dark); font-weight: 900; flex: 0 0 auto; }
+.danger-text { display: block; margin: 24px auto 0; border: 0; background: transparent; color: var(--danger); font-size: 12px; font-weight: 800; cursor: pointer; }
+footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; }
+
+/* Stage map */
+.stage-map { display: grid; gap: 11px; padding-bottom: 20px; }
+.stage-node {
+  border: 0;
+  width: 100%;
+  border-radius: 21px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 15px;
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+.stage-node::after {
+  content: "";
+  position: absolute;
+  left: 37px; bottom: -12px;
+  width: 3px; height: 13px; border-radius: 99px;
+  background: var(--soft-2);
+}
+.stage-node:last-child::after { display: none; }
+.stage-node.locked { opacity: .47; filter: saturate(.65); cursor: default; }
+.stage-node.boss { background: linear-gradient(135deg, #4a2b58, #7b458f); color: #fff; }
+.stage-node.boss.locked { background: #c9b8d0; }
+.stage-icon {
+  width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center;
+  background: var(--soft); color: var(--main-dark); font-weight: 900; font-size: 20px;
+}
+.stage-node.boss .stage-icon { background: rgba(255,255,255,.16); color: #fff; }
+.stage-copy strong { display: block; font-size: 14px; }
+.stage-copy small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 800; }
+.stage-node.boss .stage-copy small { color: rgba(255,255,255,.75); }
+.stage-stars { color: var(--gold); font-size: 15px; letter-spacing: .02em; }
+.stage-lock { font-size: 17px; }
+
+.quiz-topbar { margin-bottom: 16px; }
+.progress-wrap { flex: 1; }
+.progress-text { margin-bottom: 7px; text-align: center; font-size: 12px; font-weight: 900; color: var(--muted); }
+.progress-track { height: 8px; border-radius: 999px; background: #e8dcef; overflow: hidden; }
+.progress-bar { width: 10%; height: 100%; border-radius: inherit; background: var(--main); transition: width .25s ease; }
+.quiz-status { min-width: 63px; display: grid; justify-items: end; gap: 2px; }
+.mini-score, .combo-mini { font-size: 11px; font-weight: 900; color: var(--main-dark); }
+.combo-mini { color: #a04d72; }
+
+.boss-panel { margin: -4px 0 12px; padding: 12px 14px; border-radius: 17px; background: #493052; color: #fff; box-shadow: var(--shadow); }
+.boss-panel > div:first-child { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+.boss-panel strong { font-size: 12px; }
+.boss-track { margin-top: 8px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.18); overflow: hidden; }
+.boss-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #f3a6ca, #fff0f7); border-radius: inherit; transition: width .25s ease; }
+
+.question-card {
+  min-height: 245px;
+  border-radius: 28px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 24px 18px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+.question-kind { display: inline-flex; padding: 5px 10px; border-radius: 999px; background: var(--soft); color: var(--main-dark); font-size: 11px; font-weight: 900; }
+.question-lead { margin-top: 14px; color: var(--muted); font-size: 15px; font-weight: 800; }
+.question-visual { margin-top: 10px; font-size: clamp(64px, 18vw, 94px); line-height: 1; }
+.question-main { margin-top: 14px; font-size: clamp(72px, 22vw, 118px); line-height: 1; font-weight: 900; letter-spacing: .02em; }
+.question-main.reading-prompt { font-size: clamp(42px, 13vw, 76px); }
+.question-main.opposite-prompt { font-size: clamp(64px, 20vw, 98px); }
+.question-sub { margin-top: 10px; min-height: 20px; color: var(--muted); font-size: 13px; font-weight: 700; }
+.combo-banner { margin: 12px auto -2px; width: fit-content; max-width: 100%; padding: 8px 14px; border-radius: 999px; background: #fff0f6; color: #9f4268; font-size: 12px; font-weight: 900; animation: pop .28s ease; }
+@keyframes pop { 0%{ transform: scale(.86); opacity: .3;} 100%{ transform: scale(1); opacity: 1;} }
+
+.answers { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+.answer-btn {
+  min-height: 62px;
+  border: 2px solid transparent; border-radius: 18px; padding: 12px 14px;
+  background: var(--panel); color: var(--ink); box-shadow: 0 8px 22px rgba(73,39,87,.09);
+  font-size: 22px; font-weight: 900; cursor: pointer; transition: .15s ease;
+}
+.answer-btn:active { transform: scale(.99); }
+.answer-btn.correct { border-color: var(--main); background: #f1e6f7; color: var(--main-dark); }
+.answer-btn.wrong { border-color: #e9a0ba; background: #fff0f5; color: #ad426a; }
+.answer-btn.dim { opacity: .45; }
+.feedback { min-height: 42px; margin-top: 12px; text-align: center; font-size: 14px; font-weight: 900; }
+.feedback.good { color: var(--main-dark); }
+.feedback.bad { color: #ad5072; }
+.hidden { display: none !important; }
+
+.result-card { margin-top: 3vh; background: var(--panel); border-radius: 30px; padding: 26px 20px; text-align: center; box-shadow: var(--shadow); }
+.result-medal { width: 76px; height: 76px; margin: 0 auto 12px; border-radius: 25px; display: grid; place-items: center; background: #f4e7fa; color: #8b4aa4; font-size: 38px; }
+.result-card h2 { font-size: 29px; margin: 9px 0 6px; }
+.result-card p { color: var(--muted); font-weight: 800; }
+.result-clear-stars { margin: 7px 0; color: var(--gold); font-size: 30px; letter-spacing: .08em; }
+.result-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 17px; }
+.three-stats { grid-template-columns: repeat(3, 1fr); }
+.result-stats div { border-radius: 16px; background: var(--soft); padding: 12px 7px; }
+.result-stats span, .result-stats strong { display: block; }
+.result-stats span { color: var(--muted); font-size: 9px; font-weight: 800; }
+.result-stats strong { margin-top: 4px; font-size: 22px; color: var(--main-dark); }
+.secondary-wide { width: 100%; margin-top: 10px; border: 0; border-radius: 16px; padding: 14px; background: var(--soft); color: var(--main-dark); font-weight: 900; cursor: pointer; }
+.unlock-box { margin-top: 14px; border: 2px solid #e7c8dd; border-radius: 18px; padding: 13px; background: #fff7fb; }
+.unlock-box strong { display: block; color: #8d4467; font-size: 13px; }
+.unlock-box span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 800; }
+
+/* collection */
+.collection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.collection-card { background: var(--panel); border-radius: 21px; padding: 17px 12px; box-shadow: var(--shadow); text-align: center; min-height: 154px; }
+.collection-card.locked { filter: grayscale(.8); opacity: .58; }
+.collection-icon { font-size: 47px; min-height: 58px; display: grid; place-items: center; }
+.collection-card strong { display: block; margin-top: 7px; font-size: 13px; }
+.collection-card small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; font-weight: 800; }
+.collection-card .need { color: var(--main-dark); }
+
+.page-header { justify-content: flex-start; }
+.record-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-card { background: var(--panel); border-radius: 20px; padding: 17px; box-shadow: var(--shadow); }
+.stat-card span { display: block; color: var(--muted); font-size: 11px; font-weight: 900; }
+.stat-card strong { display: inline-block; margin-top: 5px; font-size: 27px; }
+.stat-card small { margin-left: 4px; color: var(--muted); font-weight: 800; }
+.kanji-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.kanji-chip { border-radius: 14px; background: var(--soft); padding: 10px 4px; text-align: center; }
+.kanji-chip strong { display: block; font-size: 23px; }
+.kanji-chip small { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; font-weight: 800; }
+.history-list, .stage-record-list { display: grid; gap: 8px; }
+.history-row, .stage-record-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid #eee7f1; font-size: 12px; }
+.history-row:last-child, .stage-record-row:last-child { border-bottom: 0; }
+.history-row span, .stage-record-row span { color: var(--muted); }
+.history-row strong, .stage-record-row strong { color: var(--main-dark); }
+.empty { color: var(--muted); font-size: 12px; font-weight: 800; }
+
+.modal { position: fixed; inset: 0; z-index: 10; background: rgba(36,23,43,.48); display: grid; place-items: center; padding: 20px; }
+.modal-card { position: relative; width: min(100%, 440px); border-radius: 24px; background: var(--panel); padding: 23px; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+.modal-card h3 { margin: 0 34px 14px 0; font-size: 19px; }
+.modal-card p, .modal-card li { color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.75; }
+.modal-card ol { padding-left: 1.3em; margin-bottom: 0; }
+.modal-close { position: absolute; right: 14px; top: 14px; width: 34px; height: 34px; border: 0; border-radius: 12px; background: var(--soft); color: var(--main-dark); font-weight: 900; cursor: pointer; }
+
+@media (min-width: 660px) {
+  .app-shell { padding-top: 34px; }
+  .answers { grid-template-columns: repeat(3, 1fr); }
+  .answer-btn { min-height: 80px; }
+  .question-card { min-height: 300px; }
+  .sub-actions { gap: 14px; }
+  .stage-map { grid-template-columns: 1fr 1fr; }
+  .stage-node::after { display: none; }
+  .collection-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 430px) {
+  .hero-card { padding: 19px; }
+  .hero-copy p { font-size: 11px; }
+  .star-badge { min-width: 78px; min-height: 78px; border-radius: 22px; }
+  .three-stats { gap: 7px; }
+  .result-stats div { padding: 10px 5px; }
+}
+
+@media (max-width: 360px) {
+  .sub-actions { grid-template-columns: 1fr; }
+  .kanji-list { grid-template-columns: repeat(4, 1fr); }
+  .collection-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+  <title>かんじクエスト</title>
+</head>
+<body>
+  <main class="app-shell">
+    <section id="homeView" class="view active" aria-label="ホーム">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">漢</div>
+          <div>
+            <h1>かんじクエスト</h1>
+            <p>小学1年生</p>
+          </div>
+        </div>
+        <button id="soundBtn" class="icon-btn" type="button" aria-label="音を切り替える">♪</button>
+      </header>
+
+      <section class="hero-card">
+        <div class="hero-copy">
+          <span class="eyebrow">ぼうけんしながら おぼえよう</span>
+          <h2>かんじの せかいへ<br />しゅっぱつ！</h2>
+          <p>ステージを クリアして ★を あつめよう</p>
+        </div>
+        <div class="star-badge" aria-label="星の数">
+          <span>⭐</span>
+          <strong id="starCount">0</strong>
+        </div>
+      </section>
+
+      <button id="adventureBtn" class="primary-btn" type="button">▶ ぼうけんする</button>
+
+      <section class="continue-card">
+        <div>
+          <span class="tiny-label">つぎの ステージ</span>
+          <strong id="nextStageName">1-1 かずのどうくつ</strong>
+        </div>
+        <span id="adventureStars" class="clear-stars">☆☆☆</span>
+      </section>
+
+      <section class="mode-card compact-card">
+        <div class="section-title">フリークイズ</div>
+        <div class="segmented" role="group" aria-label="クイズの種類">
+          <button class="mode-btn active" data-mode="mix" type="button">まぜこぜ</button>
+          <button class="mode-btn" data-mode="reading" type="button">よみ</button>
+          <button class="mode-btn" data-mode="kanji" type="button">かんじ</button>
+        </div>
+        <button id="freeBtn" class="mini-primary" type="button">10もん れんしゅう</button>
+      </section>
+
+      <div class="sub-actions four-actions">
+        <button id="weakBtn" class="secondary-btn" type="button">
+          <span class="action-icon">★</span>
+          <span><strong>にがて</strong><small id="weakCount">まだ 0もじ</small></span>
+        </button>
+        <button id="collectionBtn" class="secondary-btn" type="button">
+          <span class="action-icon">◆</span>
+          <span><strong>コレクション</strong><small id="collectionMini">0 / 6</small></span>
+        </button>
+        <button id="recordBtn" class="secondary-btn" type="button">
+          <span class="action-icon">▦</span>
+          <span><strong>きろく</strong><small id="accuracyMini">せいかい 0%</small></span>
+        </button>
+        <button id="helpBtn" class="secondary-btn" type="button">
+          <span class="action-icon">?</span>
+          <span><strong>つかいかた</strong><small>iPhoneにも</small></span>
+        </button>
+      </div>
+
+      <footer>Kanji Quest V02 · v0.2.0</footer>
+    </section>
+
+    <section id="stageView" class="view" aria-label="ステージ">
+      <header class="page-header">
+        <button id="stageBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
+        <div><h2>ぼうけんマップ</h2><p>★1つで つぎへ すすめるよ</p></div>
+      </header>
+      <div id="stageMap" class="stage-map"></div>
+    </section>
+
+    <section id="quizView" class="view" aria-label="クイズ">
+      <header class="quiz-topbar">
+        <button id="quitBtn" class="icon-btn ghost" type="button" aria-label="クイズをやめる">×</button>
+        <div class="progress-wrap" aria-label="進み具合">
+          <div class="progress-text"><span id="questionNo">1</span> / 10</div>
+          <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        </div>
+        <div class="quiz-status">
+          <div class="combo-mini">🔥 <span id="comboCount">0</span></div>
+          <div class="mini-score">⭐ <span id="sessionStars">0</span></div>
+        </div>
+      </header>
+
+      <section id="bossPanel" class="boss-panel hidden" aria-label="ボスのHP">
+        <div><strong id="bossName">もじモンスター</strong><span>HP <b id="bossHp">6</b></span></div>
+        <div class="boss-track"><div id="bossBar" class="boss-bar"></div></div>
+      </section>
+
+      <div class="question-card">
+        <div id="questionKind" class="question-kind">よみかた</div>
+        <div id="questionLead" class="question-lead">この かんじは なんて よむ？</div>
+        <div id="questionVisual" class="question-visual hidden" aria-hidden="true"></div>
+        <div id="questionMain" class="question-main">山</div>
+        <div id="questionSub" class="question-sub"></div>
+      </div>
+
+      <div id="comboBanner" class="combo-banner hidden">🔥 5コンボ！ ⭐ボーナス！</div>
+      <div id="answers" class="answers" aria-live="polite"></div>
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+      <button id="nextBtn" class="primary-btn next-btn hidden" type="button">つぎへ</button>
+    </section>
+
+    <section id="resultView" class="view" aria-label="結果">
+      <div class="result-card">
+        <div id="resultMedal" class="result-medal">★</div>
+        <div id="resultEyebrow" class="eyebrow">けっか</div>
+        <h2><span id="resultCorrect">0</span> / 10 せいかい！</h2>
+        <div id="resultClearStars" class="result-clear-stars hidden">☆☆☆</div>
+        <p id="resultMessage">よく がんばりました！</p>
+        <div class="result-stats three-stats">
+          <div><span>もらった ⭐</span><strong id="resultStars">0</strong></div>
+          <div><span>さいだいコンボ</span><strong id="resultCombo">0</strong></div>
+          <div><span>にがて</span><strong id="resultWeak">0</strong></div>
+        </div>
+        <div id="unlockBox" class="unlock-box hidden"></div>
+        <button id="nextStageBtn" class="primary-btn hidden" type="button">つぎの ステージへ</button>
+        <button id="retryBtn" class="secondary-wide" type="button">もういちど</button>
+        <button id="homeBtn" class="secondary-wide" type="button">ホームへ</button>
+      </div>
+    </section>
+
+    <section id="collectionView" class="view" aria-label="コレクション">
+      <header class="page-header">
+        <button id="collectionBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
+        <div><h2>コレクション</h2><p>⭐を あつめて なかまを ふやそう</p></div>
+      </header>
+      <div id="collectionGrid" class="collection-grid"></div>
+    </section>
+
+    <section id="recordView" class="view" aria-label="学習記録">
+      <header class="page-header">
+        <button id="recordBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
+        <div><h2>きろく</h2><p>これまでの がんばり</p></div>
+      </header>
+      <div class="record-grid">
+        <article class="stat-card"><span>こたえた</span><strong id="totalAnswered">0</strong><small>もん</small></article>
+        <article class="stat-card"><span>せいかい</span><strong id="totalCorrect">0</strong><small>もん</small></article>
+        <article class="stat-card"><span>せいかいりつ</span><strong id="totalAccuracy">0%</strong><small>ぜんぶ</small></article>
+        <article class="stat-card"><span>⭐</span><strong id="recordStars">0</strong><small>こ</small></article>
+      </div>
+      <section class="list-card">
+        <div class="section-title">ステージの きろく</div>
+        <div id="stageRecordList" class="stage-record-list empty">まだ ありません</div>
+      </section>
+      <section class="list-card">
+        <div class="section-title">にがてな かんじ</div>
+        <div id="weakList" class="kanji-list empty">まだ ありません</div>
+      </section>
+      <section class="list-card">
+        <div class="section-title">さいきんの けっか</div>
+        <div id="historyList" class="history-list empty">まだ ありません</div>
+      </section>
+      <button id="resetBtn" class="danger-text" type="button">きろくを ぜんぶ けす</button>
+    </section>
+
+    <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <button id="modalCloseBtn" class="modal-close" type="button" aria-label="閉じる">×</button>
+        <h3 id="modalTitle">おしらせ</h3>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+window.KANJI_DATA = [
+  {k:'一', r:'いち'}, {k:'右', r:'みぎ'}, {k:'雨', r:'あめ'}, {k:'円', r:'えん'}, {k:'王', r:'おう'},
+  {k:'音', r:'おと'}, {k:'下', r:'した'}, {k:'火', r:'ひ'}, {k:'花', r:'はな'}, {k:'貝', r:'かい'},
+  {k:'学', r:'がく'}, {k:'気', r:'き'}, {k:'九', r:'きゅう'}, {k:'休', r:'やすむ'}, {k:'玉', r:'たま'},
+  {k:'金', r:'かね'}, {k:'空', r:'そら'}, {k:'月', r:'つき'}, {k:'犬', r:'いぬ'}, {k:'見', r:'みる'},
+  {k:'五', r:'ご'}, {k:'口', r:'くち'}, {k:'校', r:'こう'}, {k:'左', r:'ひだり'}, {k:'三', r:'さん'},
+  {k:'山', r:'やま'}, {k:'子', r:'こ'}, {k:'四', r:'よん'}, {k:'糸', r:'いと'}, {k:'字', r:'じ'},
+  {k:'耳', r:'みみ'}, {k:'七', r:'なな'}, {k:'車', r:'くるま'}, {k:'手', r:'て'}, {k:'十', r:'じゅう'},
+  {k:'出', r:'でる'}, {k:'女', r:'おんな'}, {k:'小', r:'ちいさい'}, {k:'上', r:'うえ'}, {k:'森', r:'もり'},
+  {k:'人', r:'ひと'}, {k:'水', r:'みず'}, {k:'正', r:'ただしい'}, {k:'生', r:'せい'}, {k:'青', r:'あお'},
+  {k:'夕', r:'ゆう'}, {k:'石', r:'いし'}, {k:'赤', r:'あか'}, {k:'千', r:'せん'}, {k:'川', r:'かわ'},
+  {k:'先', r:'さき'}, {k:'早', r:'はやい'}, {k:'草', r:'くさ'}, {k:'足', r:'あし'}, {k:'村', r:'むら'},
+  {k:'大', r:'おおきい'}, {k:'男', r:'おとこ'}, {k:'竹', r:'たけ'}, {k:'中', r:'なか'}, {k:'虫', r:'むし'},
+  {k:'町', r:'まち'}, {k:'天', r:'てん'}, {k:'田', r:'た'}, {k:'土', r:'つち'}, {k:'二', r:'に'},
+  {k:'日', r:'ひ'}, {k:'入', r:'はいる'}, {k:'年', r:'とし'}, {k:'白', r:'しろ'}, {k:'八', r:'はち'},
+  {k:'百', r:'ひゃく'}, {k:'文', r:'ぶん'}, {k:'木', r:'き'}, {k:'本', r:'ほん'}, {k:'名', r:'な'},
+  {k:'目', r:'め'}, {k:'立', r:'たつ'}, {k:'力', r:'ちから'}, {k:'林', r:'はやし'}, {k:'六', r:'ろく'}
+];
+
+</script>
+  <script>
 (() => {
   'use strict';
 
@@ -676,3 +1199,7 @@
 
   updateHome();
 })();
+
+</script>
+</body>
+</html>

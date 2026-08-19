@@ -29,9 +29,9 @@
 
       <section class="hero-card">
         <div class="hero-copy">
-          <span class="eyebrow">きょうも ちょっとだけ</span>
-          <h2>10もんに<br />ちょうせん！</h2>
-          <p>せいかいすると ⭐ が ふえるよ</p>
+          <span class="eyebrow">ぼうけんしながら おぼえよう</span>
+          <h2>かんじの せかいへ<br />しゅっぱつ！</h2>
+          <p>ステージを クリアして ★を あつめよう</p>
         </div>
         <div class="star-badge" aria-label="星の数">
           <span>⭐</span>
@@ -39,30 +39,54 @@
         </div>
       </section>
 
-      <section class="mode-card">
-        <div class="section-title">クイズの しゅるい</div>
+      <button id="adventureBtn" class="primary-btn" type="button">▶ ぼうけんする</button>
+
+      <section class="continue-card">
+        <div>
+          <span class="tiny-label">つぎの ステージ</span>
+          <strong id="nextStageName">1-1 かずのどうくつ</strong>
+        </div>
+        <span id="adventureStars" class="clear-stars">☆☆☆</span>
+      </section>
+
+      <section class="mode-card compact-card">
+        <div class="section-title">フリークイズ</div>
         <div class="segmented" role="group" aria-label="クイズの種類">
           <button class="mode-btn active" data-mode="mix" type="button">まぜこぜ</button>
           <button class="mode-btn" data-mode="reading" type="button">よみ</button>
           <button class="mode-btn" data-mode="kanji" type="button">かんじ</button>
         </div>
+        <button id="freeBtn" class="mini-primary" type="button">10もん れんしゅう</button>
       </section>
 
-      <button id="startBtn" class="primary-btn" type="button">▶ クイズする</button>
-
-      <div class="sub-actions">
+      <div class="sub-actions four-actions">
         <button id="weakBtn" class="secondary-btn" type="button">
           <span class="action-icon">★</span>
-          <span><strong>にがてれんしゅう</strong><small id="weakCount">まだ 0もじ</small></span>
+          <span><strong>にがて</strong><small id="weakCount">まだ 0もじ</small></span>
+        </button>
+        <button id="collectionBtn" class="secondary-btn" type="button">
+          <span class="action-icon">◆</span>
+          <span><strong>コレクション</strong><small id="collectionMini">0 / 6</small></span>
         </button>
         <button id="recordBtn" class="secondary-btn" type="button">
           <span class="action-icon">▦</span>
           <span><strong>きろく</strong><small id="accuracyMini">せいかい 0%</small></span>
         </button>
+        <button id="helpBtn" class="secondary-btn" type="button">
+          <span class="action-icon">?</span>
+          <span><strong>つかいかた</strong><small>iPhoneにも</small></span>
+        </button>
       </div>
 
-      <button id="helpBtn" class="text-btn" type="button">iPhoneでホーム画面に追加するには？</button>
-      <footer>Kanji Quest V01.3 · v0.1.3</footer>
+      <footer>Kanji Quest V02 · v0.2.0</footer>
+    </section>
+
+    <section id="stageView" class="view" aria-label="ステージ">
+      <header class="page-header">
+        <button id="stageBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
+        <div><h2>ぼうけんマップ</h2><p>★1つで つぎへ すすめるよ</p></div>
+      </header>
+      <div id="stageMap" class="stage-map"></div>
     </section>
 
     <section id="quizView" class="view" aria-label="クイズ">
@@ -72,16 +96,26 @@
           <div class="progress-text"><span id="questionNo">1</span> / 10</div>
           <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
         </div>
-        <div class="mini-score">⭐ <span id="sessionStars">0</span></div>
+        <div class="quiz-status">
+          <div class="combo-mini">🔥 <span id="comboCount">0</span></div>
+          <div class="mini-score">⭐ <span id="sessionStars">0</span></div>
+        </div>
       </header>
+
+      <section id="bossPanel" class="boss-panel hidden" aria-label="ボスのHP">
+        <div><strong id="bossName">もじモンスター</strong><span>HP <b id="bossHp">6</b></span></div>
+        <div class="boss-track"><div id="bossBar" class="boss-bar"></div></div>
+      </section>
 
       <div class="question-card">
         <div id="questionKind" class="question-kind">よみかた</div>
         <div id="questionLead" class="question-lead">この かんじは なんて よむ？</div>
+        <div id="questionVisual" class="question-visual hidden" aria-hidden="true"></div>
         <div id="questionMain" class="question-main">山</div>
         <div id="questionSub" class="question-sub"></div>
       </div>
 
+      <div id="comboBanner" class="combo-banner hidden">🔥 5コンボ！ ⭐ボーナス！</div>
       <div id="answers" class="answers" aria-live="polite"></div>
       <div id="feedback" class="feedback" aria-live="polite"></div>
       <button id="nextBtn" class="primary-btn next-btn hidden" type="button">つぎへ</button>
@@ -89,17 +123,29 @@
 
     <section id="resultView" class="view" aria-label="結果">
       <div class="result-card">
-        <div class="result-medal">★</div>
-        <div class="eyebrow">けっか</div>
+        <div id="resultMedal" class="result-medal">★</div>
+        <div id="resultEyebrow" class="eyebrow">けっか</div>
         <h2><span id="resultCorrect">0</span> / 10 せいかい！</h2>
+        <div id="resultClearStars" class="result-clear-stars hidden">☆☆☆</div>
         <p id="resultMessage">よく がんばりました！</p>
-        <div class="result-stats">
+        <div class="result-stats three-stats">
           <div><span>もらった ⭐</span><strong id="resultStars">0</strong></div>
+          <div><span>さいだいコンボ</span><strong id="resultCombo">0</strong></div>
           <div><span>にがて</span><strong id="resultWeak">0</strong></div>
         </div>
-        <button id="retryBtn" class="primary-btn" type="button">もういちど</button>
+        <div id="unlockBox" class="unlock-box hidden"></div>
+        <button id="nextStageBtn" class="primary-btn hidden" type="button">つぎの ステージへ</button>
+        <button id="retryBtn" class="secondary-wide" type="button">もういちど</button>
         <button id="homeBtn" class="secondary-wide" type="button">ホームへ</button>
       </div>
+    </section>
+
+    <section id="collectionView" class="view" aria-label="コレクション">
+      <header class="page-header">
+        <button id="collectionBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
+        <div><h2>コレクション</h2><p>⭐を あつめて なかまを ふやそう</p></div>
+      </header>
+      <div id="collectionGrid" class="collection-grid"></div>
     </section>
 
     <section id="recordView" class="view" aria-label="学習記録">
@@ -114,6 +160,10 @@
         <article class="stat-card"><span>⭐</span><strong id="recordStars">0</strong><small>こ</small></article>
       </div>
       <section class="list-card">
+        <div class="section-title">ステージの きろく</div>
+        <div id="stageRecordList" class="stage-record-list empty">まだ ありません</div>
+      </section>
+      <section class="list-card">
         <div class="section-title">にがてな かんじ</div>
         <div id="weakList" class="kanji-list empty">まだ ありません</div>
       </section>
@@ -127,7 +177,7 @@
     <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal-card">
         <button id="modalCloseBtn" class="modal-close" type="button" aria-label="閉じる">×</button>
-        <h3 id="modalTitle">iPhoneでつかう</h3>
+        <h3 id="modalTitle">おしらせ</h3>
         <div id="modalBody"></div>
       </div>
     </div>
