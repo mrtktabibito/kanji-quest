@@ -671,3 +671,61 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .companion-stage-card > span { width:36px; height:36px; font-size:22px; }
   .companion-stage-card small { display:none; }
 }
+
+
+/* V06 unified original companion art */
+.companion-svg { width:100%; height:100%; display:block; overflow:visible; }
+.companion-chip.art { padding:1px; overflow:hidden; background:linear-gradient(180deg,#fff,#f7edf9); }
+.companion-chip.art .companion-svg { width:100%; height:100%; }
+.companion-stage { margin-top:auto !important; min-height:128px; padding:9px 10px 12px; display:block; }
+.companion-stage-title { font-size:10px; margin-bottom:4px; letter-spacing:.04em; }
+.companion-stage-row { min-height:92px; display:flex; align-items:flex-end; justify-content:center; gap:6px; }
+.companion-stage-card { width:76px; flex:0 1 76px; text-align:center; }
+.companion-art-frame {
+  width:68px; height:74px; margin:0 auto; display:block; border-radius:22px;
+  background:radial-gradient(circle at 50% 35%,#fff 0,#fff 42%,#f4e9f7 100%);
+  border:2px solid #e5cfea; box-shadow:0 7px 18px rgba(73,39,87,.12); padding:2px;
+}
+.companion-stage-card small { margin-top:3px; font-size:7px; }
+.companion-stage.party-count-1 .companion-stage-card { width:104px; flex-basis:104px; }
+.companion-stage.party-count-1 .companion-art-frame { width:88px; height:94px; border-radius:26px; }
+.companion-stage.party-count-2 .companion-art-frame { width:80px; height:86px; }
+.companion-stage.party-count-3 .companion-art-frame { width:72px; height:78px; }
+.companion-stage.party-count-4 .companion-art-frame { width:64px; height:70px; }
+.companion-stage.party-cheer .companion-art-frame { animation:companionArtCheer .52s cubic-bezier(.2,.9,.25,1) 2; }
+.companion-stage.party-sad .companion-art-frame { animation:companionArtSad .68s ease 1; filter:saturate(.72); }
+.companion-party.party-cheer .companion-chip.art { animation:companionArtCheer .45s ease 2; }
+.companion-party.party-sad .companion-chip.art { animation:companionArtSad .58s ease 1; }
+@keyframes companionArtCheer { 0%,100%{transform:none} 36%{transform:translateY(-10px) rotate(-7deg) scale(1.08)} 70%{transform:translateY(-3px) rotate(6deg) scale(1.03)} }
+@keyframes companionArtSad { 0%,100%{transform:none} 32%{transform:translateY(4px) rotate(-5deg) scale(.98)} 67%{transform:translateY(4px) rotate(5deg) scale(.98)} }
+
+.collection-icon.art { width:86px; height:86px; margin:0 auto 6px; display:grid; place-items:center; background:transparent; }
+.collection-icon.art .companion-svg { width:82px; height:82px; }
+.locked-silhouette { width:68px; height:68px; display:grid; place-items:center; border-radius:50%; background:#ded2e4; color:#fff; font-size:34px; }
+.result-companions .companion-chip.art { width:34px; height:34px; padding:1px; }
+
+#quizView.active { min-height:calc(100dvh - 24px); display:flex; flex-direction:column; }
+#quizView .companion-stage { margin-top:auto; }
+
+@media (max-width:430px) {
+  .companion-party { gap:2px; }
+  .companion-chip.art { width:25px; height:25px; }
+  .companion-stage { min-height:126px; padding:8px 8px 10px; }
+  .companion-stage-row { min-height:92px; gap:3px; }
+  .companion-stage-card { width:70px; flex-basis:70px; }
+  .companion-stage-card small { font-size:6.5px; }
+  .companion-stage.party-count-1 .companion-stage-card { width:108px; flex-basis:108px; }
+  .companion-stage.party-count-1 .companion-art-frame { width:92px; height:98px; }
+  .companion-stage.party-count-2 .companion-art-frame { width:82px; height:88px; }
+  .companion-stage.party-count-3 .companion-art-frame { width:72px; height:78px; }
+  .companion-stage.party-count-4 .companion-art-frame { width:64px; height:70px; }
+}
+@media (max-width:430px) and (max-height:740px) {
+  .companion-stage { min-height:104px; padding-top:5px; }
+  .companion-stage-row { min-height:74px; }
+  .companion-stage.party-count-1 .companion-art-frame { width:74px; height:80px; }
+  .companion-stage.party-count-2 .companion-art-frame { width:70px; height:76px; }
+  .companion-stage.party-count-3 .companion-art-frame { width:62px; height:68px; }
+  .companion-stage.party-count-4 .companion-art-frame { width:56px; height:62px; }
+  .companion-stage-card small { display:none; }
+}
