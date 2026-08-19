@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#8552a5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="かんじクエスト" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <title>かんじクエスト</title>
+</head>
+<body>
+  <main class="app-shell">
+    <section id="homeView" class="view active" aria-label="ホーム">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">漢</div>
+          <div>
+            <h1>かんじクエスト</h1>
+            <p>小学1年生</p>
+          </div>
+        </div>
+        <button id="soundBtn" class="icon-btn" type="button" aria-label="音を切り替える">♪</button>
+      </header>
+
+      <section class="hero-card">
+        <div class="hero-copy">
+          <span class="eyebrow">きょうも ちょっとだけ</span>
+          <h2>10もんに<br />ちょうせん！</h2>
+          <p>せいかいすると ⭐ が ふえるよ</p>
+        </div>
+        <div class="star-badge" aria-label="星の数">
+          <span>⭐</span>
+          <strong id="starCount">0</strong>
+        </div>
+      </section>
+
+      <section class="mode-card">
+        <div class="section-title">クイズの しゅるい</div>
+        <div class="segmented" role="group" aria-label="クイズの種類">
+          <button class="mode-btn active" data-mode="mix" type="button">まぜこぜ</button>
+          <button class="mode-btn" data-mode="reading" type="button">よみ</button>
+          <button class="mode-btn" data-mode="kanji" type="button">かんじ</button>
+        </div>
+      </section>
+
+      <button id="startBtn" class="primary-btn" type="button">▶ クイズする</button>
+
+      <div class="sub-actions">
+        <button id="weakBtn" class="secondary-btn" type="button">
+          <span class="action-icon">★</span>
+          <span><strong>にがてれんしゅう</strong><small id="weakCount">まだ 0もじ</small></span>
+        </button>
+        <button id="recordBtn" class="secondary-btn" type="button">
+          <span class="action-icon">▦</span>
+          <span><strong>きろく</strong><small id="accuracyMini">せいかい 0%</small></span>
+        </button>
+      </div>
+
+      <button id="helpBtn" class="text-btn" type="button">iPhoneでホーム画面に追加するには？</button>
+      <footer>Kanji Quest V01.3 · v0.1.3</footer>
+    </section>
+
+    <section id="quizView" class="view" aria-label="クイズ">
+      <header class="quiz-topbar">
+        <button id="quitBtn" class="icon-btn ghost" type="button" aria-label="クイズをやめる">×</button>
+        <div class="progress-wrap" aria-label="進み具合">
+          <div class="progress-text"><span id="questionNo">1</span> / 10</div>
+          <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        </div>
+        <div class="mini-score">⭐ <span id="sessionStars">0</span></div>
+      </header>
+
+      <div class="question-card">
+        <div id="questionKind" class="question-kind">よみかた</div>
+        <div id="questionLead" class="question-lead">この かんじは なんて よむ？</div>
+        <div id="questionMain" class="question-main">山</div>
+        <div id="questionSub" class="question-sub"></div>
+      </div>
+
+      <div id="answers" class="answers" aria-live="polite"></div>
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+      <button id="nextBtn" class="primary-btn next-btn hidden" type="button">つぎへ</button>
+    </section>
+
+    <section id="resultView" class="view" aria-label="結果">
+      <div class="result-card">
+        <div class="result-medal">★</div>
+        <div class="eyebrow">けっか</div>
+        <h2><span id="resultCorrect">0</span> / 10 せいかい！</h2>
+        <p id="resultMessage">よく がんばりました！</p>
+        <div class="result-stats">
+          <div><span>もらった ⭐</span><strong id="resultStars">0</strong></div>
+          <div><span>にがて</span><strong id="resultWeak">0</strong></div>
+        </div>
+        <button id="retryBtn" class="primary-btn" type="button">もういちど</button>
+        <button id="homeBtn" class="secondary-wide" type="button">ホームへ</button>
+      </div>
+    </section>
+
+    <section id="recordView" class="view" aria-label="学習記録">
+      <header class="page-header">
+        <button id="recordBackBtn" class="icon-btn ghost" type="button" aria-label="戻る">←</button>
+        <div><h2>きろく</h2><p>これまでの がんばり</p></div>
+      </header>
+      <div class="record-grid">
+        <article class="stat-card"><span>こたえた</span><strong id="totalAnswered">0</strong><small>もん</small></article>
+        <article class="stat-card"><span>せいかい</span><strong id="totalCorrect">0</strong><small>もん</small></article>
+        <article class="stat-card"><span>せいかいりつ</span><strong id="totalAccuracy">0%</strong><small>ぜんぶ</small></article>
+        <article class="stat-card"><span>⭐</span><strong id="recordStars">0</strong><small>こ</small></article>
+      </div>
+      <section class="list-card">
+        <div class="section-title">にがてな かんじ</div>
+        <div id="weakList" class="kanji-list empty">まだ ありません</div>
+      </section>
+      <section class="list-card">
+        <div class="section-title">さいきんの けっか</div>
+        <div id="historyList" class="history-list empty">まだ ありません</div>
+      </section>
+      <button id="resetBtn" class="danger-text" type="button">きろくを ぜんぶ けす</button>
+    </section>
+
+    <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <button id="modalCloseBtn" class="modal-close" type="button" aria-label="閉じる">×</button>
+        <h3 id="modalTitle">iPhoneでつかう</h3>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
