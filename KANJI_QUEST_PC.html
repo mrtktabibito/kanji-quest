@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="かんじクエスト" />
   <title>かんじクエスト</title>
 
-<style>
+  <style>
 :root {
   --bg: #f7f2fa;
   --panel: #ffffff;
@@ -832,7 +832,31 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
   .boss-hit-burst { font-size:14px; top:18%; }
 }
 
-</style>
+
+/* V06.4 companion profile / tap interaction */
+.companion-open { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+button.companion-chip, button.companion-stage-card { border:0; font:inherit; color:inherit; background:transparent; padding:0; }
+.companion-chip.companion-open:active { transform:scale(.88); }
+.companion-stage-card.companion-open:active .companion-art-frame { transform:translateY(2px) scale(.96); }
+.companion-stage-title span { margin-left:5px; font-size:7px; color:#ad91b8; }
+.collection-card.companion-open { cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
+.collection-card.companion-open:active { transform:scale(.98); }
+.collection-card small b { color:var(--main-dark); font-size:9px; }
+.companion-profile { text-align:center; }
+.companion-profile-art { width:190px; height:190px; margin:0 auto 8px; display:grid; place-items:center; border-radius:36px; background:radial-gradient(circle at 50% 38%,#fff 0 34%,#f5e9f8 72%,#ead9f0 100%); box-shadow:inset 0 0 0 2px #ead7f0,0 14px 34px rgba(73,39,87,.12); }
+.companion-profile-art .companion-svg { width:158px; height:158px; filter:drop-shadow(0 10px 8px rgba(52,31,63,.18)); }
+.companion-profile-type { display:inline-block; margin:2px auto 8px; padding:5px 12px; border-radius:999px; background:var(--soft); color:var(--main-dark); font-size:11px; font-weight:900; }
+.companion-profile-personality { margin:7px 0 12px !important; color:#62566a !important; text-align:left; font-size:13px !important; line-height:1.7 !important; }
+.companion-profile-info { display:grid; gap:7px; text-align:left; }
+.companion-profile-info div { padding:9px 11px; border-radius:13px; background:#f8f1fa; }
+.companion-profile-info span { display:block; color:#9a83a4; font-size:9px; font-weight:900; }
+.companion-profile-info strong { display:block; margin-top:2px; color:#493952; font-size:12px; line-height:1.45; }
+@media (max-width:430px) {
+  .companion-profile-art { width:165px; height:165px; border-radius:31px; }
+  .companion-profile-art .companion-svg { width:140px; height:140px; }
+}
+
+  </style>
 </head>
 <body>
   <main class="app-shell">
@@ -899,7 +923,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
         </button>
       </div>
 
-      <footer>Kanji Quest V06.3 · v0.6.3</footer>
+      <footer>Kanji Quest V06.4 · v0.6.4</footer>
     </section>
 
     <section id="stageView" class="view" aria-label="ステージ">
@@ -1059,7 +1083,7 @@ footer { margin-top: 16px; text-align: center; color: #a79cac; font-size: 10px; 
     </div>
   </main>
 
-<script>
+  <script>
 window.KANJI_DATA = [
   {k:'一', r:'いち'}, {k:'右', r:'みぎ'}, {k:'雨', r:'あめ'}, {k:'円', r:'えん'}, {k:'王', r:'おう'},
   {k:'音', r:'おと'}, {k:'下', r:'した'}, {k:'火', r:'ひ'}, {k:'花', r:'はな'}, {k:'貝', r:'かい'},
@@ -1079,8 +1103,8 @@ window.KANJI_DATA = [
   {k:'目', r:'め'}, {k:'立', r:'たつ'}, {k:'力', r:'ちから'}, {k:'林', r:'はやし'}, {k:'六', r:'ろく'}
 ];
 
-</script>
-<script>
+  </script>
+  <script>
 (() => {
   'use strict';
 
@@ -1130,6 +1154,34 @@ window.KANJI_DATA = [
     '上':'下','下':'上','左':'右','右':'左','大':'小','小':'大','入':'出','出':'入','男':'女','女':'男'
   };
 
+
+  // 代表読みだけではなく、1年生配当漢字が持つ一般的な音訓も使って
+  // 「せん → 千 / 川 / 先」のような複数正解になり得る選択肢を除外する。
+  const READING_ALIASES = {
+    '一':['いち','いつ','ひと','ひとつ'],'右':['う','ゆう','みぎ'],'雨':['う','あめ','あま'],'円':['えん','まる'],'王':['おう'],
+    '音':['おん','いん','おと','ね'],'下':['か','げ','した','しも','もと','さげる','くだる'],'火':['か','ひ','ほ'],'花':['か','はな'],'貝':['かい'],
+    '学':['がく','まなぶ'],'気':['き','け'],'九':['きゅう','く','ここの'],'休':['きゅう','やすむ'],'玉':['ぎょく','たま'],
+    '金':['きん','こん','かね','かな'],'空':['くう','そら','あく','から'],'月':['げつ','がつ','つき'],'犬':['けん','いぬ'],'見':['けん','みる'],
+    '五':['ご','いつ'],'口':['こう','く','くち'],'校':['こう'],'左':['さ','ひだり'],'三':['さん','み','みつ'],
+    '山':['さん','やま'],'子':['し','す','こ'],'四':['し','よ','よん'],'糸':['し','いと'],'字':['じ'],
+    '耳':['じ','みみ'],'七':['しち','なな'],'車':['しゃ','くるま'],'手':['しゅ','て'],'十':['じゅう','じっ','とお'],
+    '出':['しゅつ','でる','だす'],'女':['じょ','にょ','おんな'],'小':['しょう','ちいさい','こ'],'上':['じょう','しょう','うえ','かみ'],'森':['しん','もり'],
+    '人':['じん','にん','ひと'],'水':['すい','みず'],'正':['せい','しょう','ただしい'],'生':['せい','しょう','いきる','うまれる','なま'],'青':['せい','しょう','あお'],
+    '夕':['せき','ゆう'],'石':['せき','しゃく','こく','いし'],'赤':['せき','しゃく','あか'],'千':['せん','ち'],'川':['せん','かわ'],
+    '先':['せん','さき'],'早':['そう','さ','はやい'],'草':['そう','くさ'],'足':['そく','あし','たる'],'村':['そん','むら'],
+    '大':['だい','たい','おおきい'],'男':['だん','なん','おとこ'],'竹':['ちく','たけ'],'中':['ちゅう','なか'],'虫':['ちゅう','むし'],
+    '町':['ちょう','まち'],'天':['てん','あま','あめ'],'田':['でん','た'],'土':['ど','と','つち'],'二':['に','ふた'],
+    '日':['にち','じつ','ひ','か'],'入':['にゅう','はいる','いる'],'年':['ねん','とし'],'白':['はく','びゃく','しろ'],'八':['はち','や','よう'],
+    '百':['ひゃく','びゃく'],'文':['ぶん','もん','ふみ'],'木':['ぼく','もく','き'],'本':['ほん','もと'],'名':['めい','みょう','な'],
+    '目':['もく','ぼく','め'],'立':['りつ','りゅう','たつ'],'力':['りょく','りき','ちから'],'林':['りん','はやし'],'六':['ろく','む','むい']
+  };
+
+  function kanjiHasReading(kanji, reading) {
+    const item = DATA.find(x => x.k === kanji);
+    const aliases = READING_ALIASES[kanji] || [];
+    return (item?.r === reading) || aliases.includes(reading);
+  }
+
   // 小学1年生の配当漢字だけで作る熟語。level 3 は後半・最終ボス向け。
   const COMPOUNDS = [
     {w:'学校',r:'がっこう',level:1},{w:'学生',r:'がくせい',level:1},{w:'先生',r:'せんせい',level:1},
@@ -1160,6 +1212,16 @@ window.KANJI_DATA = [
     { id:'dragon', clearNeed:6, unlockStage:'2-1', icon:'✦', name:'ドラゴンのともだち', desc:'2-1クリアで なかま' }
   ];
 
+
+
+  const COMPANION_PROFILES = {
+    egg:{ name:'まほうのたまご', type:'ふしぎなたまご', personality:'ちょっぴり はずかしがりや。いつも静かだけど、みんなのがんばりをちゃんと見ている。', skill:'キラキラを見つけること', favorite:'ほしの光', join:'1-1 かずのどうくつ クリア' },
+    cat:{ name:'むらさきねこ', type:'いたずらねこ', personality:'元気で いたずらずき。正解すると、だれより早くぴょん！とよろこぶ。', skill:'すばやく答えを見つけること', favorite:'ピンクのリボン', join:'1-2 しぜんのもり クリア' },
+    owl:{ name:'ものしりふくろう', type:'ものしり博士', personality:'おちついていて とてもものしり。むずかしい熟語が出ると、ちょっとわくわくする。', skill:'むずかしい読みを考えること', favorite:'本と夜の森', join:'1-3 そらといろ クリア' },
+    unicorn:{ name:'ほしのユニコーン', type:'ゆめみるユニコーン', personality:'やさしくて ゆめみがち。コンボがつづくと、星の力でみんなを応援する。', skill:'コンボを応援すること', favorite:'星と月', join:'1-4 からだとひと クリア' },
+    wizard:{ name:'かんじのまどうし', type:'ちいさな魔法使い', personality:'研究ねっしんで ちょっとふしぎ。知らない読み方を見ると、すぐに調べたくなる。', skill:'漢字のヒントを考えること', favorite:'魔法のつえ', join:'BOSS もじモンスター クリア' },
+    dragon:{ name:'ドラゴンのともだち', type:'つよがりドラゴン', personality:'見た目はつよそうだけど、じつは てれや。ボス戦になると急にたのもしくなる。', skill:'ボス戦の応援', favorite:'むらさきの宝石', join:'2-1 ばしょとむき クリア' }
+  };
 
   const COMPANION_ART = {
     egg:`<svg viewBox="0 0 96 96" class="companion-svg" aria-hidden="true">
@@ -1390,17 +1452,33 @@ window.KANJI_DATA = [
   function renderCompanions() {
     const unlocked = getUnlockedCollections();
     const party = unlocked.slice(0, 6);
-    const chipHtml = party.map(c => `<span class="companion-chip art" title="${c.name}">${companionArt(c.id)}</span>`).join('');
-    const stageHtml = party.map(c => `<div class="companion-stage-card art-${c.id}" title="${c.name}"><span class="companion-art-frame">${companionArt(c.id)}</span><small>${c.name}</small></div>`).join('');
+    const chipHtml = party.map(c => `<button type="button" class="companion-chip art companion-open" data-companion-id="${c.id}" aria-label="${c.name}を大きく見る" title="${c.name}">${companionArt(c.id)}</button>`).join('');
+    const stageHtml = party.map(c => `<button type="button" class="companion-stage-card art-${c.id} companion-open" data-companion-id="${c.id}" aria-label="${c.name}のしょうかいを見る" title="${c.name}"><span class="companion-art-frame">${companionArt(c.id)}</span><small>${c.name}</small></button>`).join('');
     const q = $('companionParty');
     if (q) q.innerHTML = chipHtml ? `<b>なかま</b>${chipHtml}` : '';
     const s = $('companionStage');
     if (s) {
       s.className = `companion-stage party-count-${Math.max(1, party.length)}`;
-      s.innerHTML = stageHtml ? `<div class="companion-stage-title">いっしょに ぼうけん！</div><div class="companion-stage-row">${stageHtml}</div>` : '';
+      s.innerHTML = stageHtml ? `<div class="companion-stage-title">いっしょに ぼうけん！ <span>タップで しょうかい</span></div><div class="companion-stage-row">${stageHtml}</div>` : '';
     }
     const r = $('resultCompanions');
     if (r) r.innerHTML = chipHtml ? `<span>いっしょに ぼうけん</span>${chipHtml}` : '';
+  }
+
+  function openCompanionProfile(id) {
+    const profile = COMPANION_PROFILES[id];
+    if (!profile || !COMPANION_ART[id]) return;
+    openModal(profile.name, `
+      <div class="companion-profile">
+        <div class="companion-profile-art art-${id}">${companionArt(id)}</div>
+        <div class="companion-profile-type">${profile.type}</div>
+        <p class="companion-profile-personality">${profile.personality}</p>
+        <div class="companion-profile-info">
+          <div><span>とくい</span><strong>${profile.skill}</strong></div>
+          <div><span>すき</span><strong>${profile.favorite}</strong></div>
+          <div><span>なかまに なった</span><strong>${profile.join}</strong></div>
+        </div>
+      </div>`);
   }
 
   function knownCharsForStage(stageIndex) {
@@ -1695,8 +1773,9 @@ window.KANJI_DATA = [
     }
 
     if (type === 'kanji') {
-      const pool = DATA.filter(x => x.k !== item.k && x.r !== item.r);
-      const distractors = shuffle(pool).slice(0,2);
+      // 代表読みが違っても、その読みを持つ別漢字は選択肢から除外する。
+      // 例: 「せん」なら 千 が正解のとき、川・先は候補にしない。
+      const pool = DATA.filter(x => x.k !== item.k && !kanjiHasReading(x.k, item.r));
       return { item, type, prompt:item.r, answer:item.k, options:makeUniqueOptions(item.k, pool.map(x => x.k)) };
     }
 
@@ -2057,10 +2136,10 @@ window.KANJI_DATA = [
     const unlockedIds = new Set(getUnlockedCollections().map(c => c.id));
     grid.innerHTML = COLLECTIONS.map(c => {
       const unlocked = unlockedIds.has(c.id);
-      return `<article class="collection-card${unlocked ? '' : ' locked'}">
+      return `<article class="collection-card${unlocked ? ' companion-open' : ' locked'}" ${unlocked ? `data-companion-id="${c.id}" role="button" tabindex="0" aria-label="${c.name}のしょうかいを見る"` : ''}>
         <div class="collection-icon art">${unlocked ? companionArt(c.id) : '<span class="locked-silhouette">?</span>'}</div>
         <strong>${unlocked ? c.name : '？？？'}</strong>
-        <small>${unlocked ? c.desc : `<span class="need">${c.unlockStage}を クリアで なかま</span>`}</small>
+        <small>${unlocked ? `${c.desc}<br><b>タップで しょうかい</b>` : `<span class="need">${c.unlockStage}を クリアで なかま</span>`}</small>
       </article>`;
     }).join('');
   }
@@ -2146,6 +2225,18 @@ window.KANJI_DATA = [
     } catch (_) {}
   }
 
+  document.addEventListener('click', e => {
+    const target = e.target.closest('[data-companion-id]');
+    if (target) openCompanionProfile(target.dataset.companionId);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const target = e.target.closest('[data-companion-id]');
+    if (!target) return;
+    e.preventDefault();
+    openCompanionProfile(target.dataset.companionId);
+  });
+
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
@@ -2221,6 +2312,6 @@ window.KANJI_DATA = [
   updateHome();
 })();
 
-</script>
+  </script>
 </body>
 </html>
